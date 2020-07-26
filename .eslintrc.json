@@ -6,9 +6,11 @@
   },
   "extends": [
     "airbnb-typescript",
+    "airbnb/hooks",
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
     "prettier",
+    "prettier/react",
     "prettier/@typescript-eslint"
   ],
   "parserOptions": {
@@ -17,6 +19,14 @@
   "plugins": ["prettier"],
   "rules": {
     "prettier/prettier": "error",
-    "import/prefer-default-export": "off"
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "react/prop-types": "off",
+    "import/prefer-default-export": "off",
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": true
+      }
+    ]
   }
 }
