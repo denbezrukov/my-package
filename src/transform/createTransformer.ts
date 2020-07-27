@@ -1,11 +1,11 @@
 import { scaleLinear } from 'd3-scale';
-import { Scale, ScaleConfig } from './scale.interface';
+import { Transformer, TransformerConfig } from './transform.interface';
 
 const interpolateCanvasRound = (a: number, b: number) => (t: number) => {
   return Math.round(a * (1 - t) + b * t) + 0.5;
 };
 
-export const createTransformer = (config: ScaleConfig): Scale => {
+export const createTransformer = (config: TransformerConfig): Transformer => {
   const { domain, range } = config;
 
   let shift = 0;
@@ -23,12 +23,12 @@ export const createTransformer = (config: ScaleConfig): Scale => {
     transform.range([from + shift, to * k + shift]);
   };
 
-  const setShift: Scale['setShift'] = (action) => {
+  const setShift: Transformer['setShift'] = (action) => {
     shift = action(shift);
     updateTransform();
   };
 
-  const setScale: Scale['setScale'] = (action) => {
+  const setScale: Transformer['setScale'] = (action) => {
     scale = action(scale);
     updateTransform();
   };

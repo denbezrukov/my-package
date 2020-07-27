@@ -2,14 +2,17 @@ import React, { FunctionComponent, memo, useCallback } from 'react';
 import { Rect, Group, Line } from 'react-konva';
 import { AxisProps } from '../axis.interface';
 import { XTick } from './xTick';
-import { useTransformer } from '../../scale/_hooks/useTransformer';
-import { MouseMove, useMouseMove } from '../../scale/_hooks/useMouseMove';
+import {
+  DragInteraction,
+  useDragInteraction,
+} from '../../transform/_hooks/useDragInteraction';
+import { useXTransformer } from '../../transform/_hooks/useXTransformer';
 
 const XAxisComponent: FunctionComponent<AxisProps> = (props) => {
   const { width, height, size } = props;
   const y = height - size + 0.5;
 
-  const { transform, setScale } = useTransformer();
+  const { transform, setScale } = useXTransformer();
 
   const format = transform.tickFormat();
 
@@ -17,7 +20,7 @@ const XAxisComponent: FunctionComponent<AxisProps> = (props) => {
     setScale(() => 0);
   }, [setScale]);
 
-  const onMove: MouseMove = useCallback(
+  const onMove: DragInteraction = useCallback(
     (event, point) => {
       const { clientX } = event;
       setScale((scale) => {
@@ -27,7 +30,7 @@ const XAxisComponent: FunctionComponent<AxisProps> = (props) => {
     [setScale],
   );
 
-  const onMouseDown = useMouseMove(onMove);
+  const onMouseDown = useDragInteraction(onMove);
 
   return (
     <Group onDblClick={onDblClick} onMouseDown={onMouseDown}>

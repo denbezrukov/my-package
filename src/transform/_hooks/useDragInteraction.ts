@@ -1,10 +1,10 @@
 import { useCallback, useRef } from 'react';
 import Konva from 'konva';
-import { Point } from '../scale.interface';
+import { Point } from '../transform.interface';
 
-export type MouseMove = (event: MouseEvent, prevPoint: Point) => void;
+export type DragInteraction = (event: MouseEvent, prevPoint: Point) => void;
 
-export const useMouseMove = (callback: MouseMove) => {
+export const useDragInteraction = (callback: DragInteraction) => {
   const point = useRef<Point | null>(null);
 
   const onMouseMove = useCallback(
@@ -23,8 +23,6 @@ export const useMouseMove = (callback: MouseMove) => {
 
   return useCallback(
     (event: Konva.KonvaEventObject<MouseEvent>) => {
-      // eslint-disable-next-line no-param-reassign
-      event.cancelBubble = true;
       const { clientX, clientY } = event.evt;
       point.current = {
         x: clientX,

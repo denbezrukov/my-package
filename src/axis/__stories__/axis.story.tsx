@@ -1,15 +1,23 @@
-import React, { FunctionComponent, useCallback } from 'react';
+import React, { FunctionComponent, useCallback, useMemo } from 'react';
 import { storiesOf } from '@storybook/react';
 import { Layer, Stage, Rect, Text } from 'react-konva';
 import { number, withKnobs } from '@storybook/addon-knobs';
 import { XAxis } from '../xAxis/xAxis';
-import { ScaleContext } from '../../scale/scale.constant';
-import { useTransformerState } from '../../scale/_hooks/useTransformerState';
-import { useTransformer } from '../../scale/_hooks/useTransformer';
+import {
+  XTransformerContext,
+  YTransformerContext,
+} from '../../transform/transform.constant';
+import { useTransformerState } from '../../transform/_hooks/useTransformerState';
 import { YAxis } from '../yAxis/yAxis';
-import { MouseMove, useMouseMove } from '../../scale/_hooks/useMouseMove';
+import {
+  DragInteraction,
+  useDragInteraction,
+} from '../../transform/_hooks/useDragInteraction';
+import { TransformerConfig } from '../../transform/transform.interface';
+import { useYTransformer } from '../../transform/_hooks/useYTransformer';
+import { useXTransformer } from '../../transform/_hooks/useXTransformer';
 
-storiesOf('axis', module)
+storiesOf('Axis', module)
   .addDecorator(withKnobs)
   .add('XAxis', () => {
     const width = number('width', 400);
@@ -18,16 +26,20 @@ storiesOf('axis', module)
     const from = number('from', 0);
     const to = number('to', 100);
 
-    const scale = useTransformerState({
-      domain: [from, to],
-      range: [0, width],
-    });
+    const config = useMemo<TransformerConfig>(() => {
+      return {
+        domain: [from, to],
+        range: [0, width],
+      };
+    }, [from, to, width]);
+
+    const transformer = useTransformerState(config);
 
     return (
       <Stage width={width} height={height}>
-        <ScaleContext.Provider value={scale}>
+        <XTransformerContext.Provider value={transformer}>
           <XInteractionStage width={width} height={height} size={size} />
-        </ScaleContext.Provider>
+        </XTransformerContext.Provider>
       </Stage>
     );
   })
@@ -38,16 +50,20 @@ storiesOf('axis', module)
     const from = number('from', 0);
     const to = number('to', 100);
 
-    const scale = useTransformerState({
-      domain: [from, to],
-      range: [0, width],
-    });
+    const config = useMemo<TransformerConfig>(() => {
+      return {
+        domain: [from, to],
+        range: [0, width],
+      };
+    }, [from, to, width]);
+
+    const transformer = useTransformerState(config);
 
     return (
       <Stage width={width} height={height}>
-        <ScaleContext.Provider value={scale}>
+        <YTransformerContext.Provider value={transformer}>
           <YInteractionStage width={width} height={height} size={size} />
-        </ScaleContext.Provider>
+        </YTransformerContext.Provider>
       </Stage>
     );
   });
@@ -58,9 +74,9 @@ export const YInteractionStage: FunctionComponent<{
   size: number;
 }> = (props) => {
   const { width, height, size } = props;
-  const { setShift } = useTransformer();
+  const { setShift } = useYTransformer();
 
-  const onMove: MouseMove = useCallback(
+  const onMove: DragInteraction = useCallback(
     (event, point) => {
       const { clientY } = event;
       setShift((shift) => {
@@ -69,7 +85,7 @@ export const YInteractionStage: FunctionComponent<{
     },
     [setShift],
   );
-  const onMouseDown = useMouseMove(onMove);
+  const onMouseDown = useDragInteraction(onMove);
 
   const onDbClick = useCallback(() => {
     setShift(() => 0);
@@ -98,9 +114,9 @@ export const XInteractionStage: FunctionComponent<{
   size: number;
 }> = (props) => {
   const { width, height, size } = props;
-  const { setShift } = useTransformer();
+  const { setShift } = useXTransformer();
 
-  const onMove: MouseMove = useCallback(
+  const onMove: DragInteraction = useCallback(
     (event, point) => {
       const { clientX } = event;
       setShift((shift) => {
@@ -109,7 +125,7 @@ export const XInteractionStage: FunctionComponent<{
     },
     [setShift],
   );
-  const onMouseDown = useMouseMove(onMove);
+  const onMouseDown = useDragInteraction(onMove);
 
   const onDbClick = useCallback(() => {
     setShift(() => 0);

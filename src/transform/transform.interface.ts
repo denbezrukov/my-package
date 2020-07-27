@@ -1,11 +1,11 @@
 import { ScaleContinuousNumeric } from 'd3-scale';
 
-export interface ScaleConfig {
+export interface TransformerConfig {
   domain: [number, number];
   range: [number, number];
 }
 
-export interface Scale {
+export interface Transformer {
   transform: ScaleContinuousNumeric<number, number>;
   setShift: (setShift: (shift: number) => number) => void;
   setScale: (setScale: (scale: number) => number) => void;
