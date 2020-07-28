@@ -5,11 +5,12 @@ import { number, withKnobs } from '@storybook/addon-knobs';
 import {
   XTransformerContext,
   YTransformerContext,
-} from '../../transform/transform.constant';
+} from '../../transform/transformerContext';
 import { useTransformerState } from '../../transform/_hooks/useTransformerState';
 
 import { TransformerConfig } from '../../transform/transform.interface';
 import { Grid } from '../grid';
+import { DimensionContext } from '../../dimension/dimensionContext';
 
 storiesOf('Grid', module)
   .addDecorator(withKnobs)
@@ -22,7 +23,7 @@ storiesOf('Grid', module)
     const xTransformerConfig = useMemo<TransformerConfig>(() => {
       return {
         domain: [from, to],
-        range: [0, width],
+        range: [10, width - 10],
       };
     }, [from, to, width]);
 
@@ -31,21 +32,32 @@ storiesOf('Grid', module)
     const yTransformerConfig = useMemo<TransformerConfig>(() => {
       return {
         domain: [from, to],
-        range: [0, width],
+        range: [10, width - 10],
       };
     }, [from, to, width]);
 
     const yTransformer = useTransformerState(yTransformerConfig);
 
+    const dimension = useMemo(() => {
+      return {
+        width,
+        height,
+        yAxisSize: 0,
+        xAxisSize: 0,
+      };
+    }, [width, height]);
+
     return (
       <Stage width={width} height={height}>
-        <Layer>
+        <DimensionContext.Provider value={dimension}>
           <XTransformerContext.Provider value={xTransformer}>
             <YTransformerContext.Provider value={yTransformer}>
-              <Grid width={width} height={height} />
+              <Layer>
+                <Grid />
+              </Layer>
             </YTransformerContext.Provider>
           </XTransformerContext.Provider>
-        </Layer>
+        </DimensionContext.Provider>
       </Stage>
     );
   });

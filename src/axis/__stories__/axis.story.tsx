@@ -6,7 +6,7 @@ import { XAxis } from '../xAxis/xAxis';
 import {
   XTransformerContext,
   YTransformerContext,
-} from '../../transform/transform.constant';
+} from '../../transform/transformerContext';
 import { useTransformerState } from '../../transform/_hooks/useTransformerState';
 import { YAxis } from '../yAxis/yAxis';
 import {
@@ -16,6 +16,8 @@ import {
 import { TransformerConfig } from '../../transform/transform.interface';
 import { useYTransformer } from '../../transform/_hooks/useYTransformer';
 import { useXTransformer } from '../../transform/_hooks/useXTransformer';
+import { DimensionContext } from '../../dimension/dimensionContext';
+import { useDimension } from '../../dimension/useDimension';
 
 storiesOf('Axis', module)
   .addDecorator(withKnobs)
@@ -35,11 +37,22 @@ storiesOf('Axis', module)
 
     const transformer = useTransformerState(config);
 
+    const dimension = useMemo(() => {
+      return {
+        width,
+        height,
+        yAxisSize: 0,
+        xAxisSize: size,
+      };
+    }, [width, height, size]);
+
     return (
       <Stage width={width} height={height}>
-        <XTransformerContext.Provider value={transformer}>
-          <XInteractionStage width={width} height={height} size={size} />
-        </XTransformerContext.Provider>
+        <DimensionContext.Provider value={dimension}>
+          <XTransformerContext.Provider value={transformer}>
+            <XInteractionStage />
+          </XTransformerContext.Provider>
+        </DimensionContext.Provider>
       </Stage>
     );
   })
@@ -58,22 +71,27 @@ storiesOf('Axis', module)
     }, [from, to, width]);
 
     const transformer = useTransformerState(config);
+    const dimension = useMemo(() => {
+      return {
+        width,
+        height,
+        yAxisSize: size,
+        xAxisSize: 0,
+      };
+    }, [width, height, size]);
 
     return (
       <Stage width={width} height={height}>
-        <YTransformerContext.Provider value={transformer}>
-          <YInteractionStage width={width} height={height} size={size} />
-        </YTransformerContext.Provider>
+        <DimensionContext.Provider value={dimension}>
+          <YTransformerContext.Provider value={transformer}>
+            <YInteractionStage />
+          </YTransformerContext.Provider>
+        </DimensionContext.Provider>
       </Stage>
     );
   });
 
-export const YInteractionStage: FunctionComponent<{
-  width: number;
-  height: number;
-  size: number;
-}> = (props) => {
-  const { width, height, size } = props;
+export const YInteractionStage: FunctionComponent = () => {
   const { setShift } = useYTransformer();
 
   const onMove: DragInteraction = useCallback(
@@ -91,6 +109,8 @@ export const YInteractionStage: FunctionComponent<{
     setShift(() => 0);
   }, [setShift]);
 
+  const { width, height, yAxisSize: size } = useDimension();
+
   return (
     <Layer>
       <Rect
@@ -103,17 +123,12 @@ export const YInteractionStage: FunctionComponent<{
       />
       <Text x={width / 2} y={(height - size) / 2} text="Drag for shift" />
 
-      <YAxis width={width} height={height} size={size} />
+      <YAxis />
     </Layer>
   );
 };
 
-export const XInteractionStage: FunctionComponent<{
-  width: number;
-  height: number;
-  size: number;
-}> = (props) => {
-  const { width, height, size } = props;
+export const XInteractionStage: FunctionComponent = () => {
   const { setShift } = useXTransformer();
 
   const onMove: DragInteraction = useCallback(
@@ -131,6 +146,8 @@ export const XInteractionStage: FunctionComponent<{
     setShift(() => 0);
   }, [setShift]);
 
+  const { width, height, xAxisSize: size } = useDimension();
+
   return (
     <Layer>
       <Rect
@@ -143,7 +160,7 @@ export const XInteractionStage: FunctionComponent<{
       />
       <Text x={width / 2} y={(height - size) / 2} text="Drag for shift" />
 
-      <XAxis width={width} height={height} size={size} />
+      <XAxis />
     </Layer>
   );
 };

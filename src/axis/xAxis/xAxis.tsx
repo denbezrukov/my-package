@@ -1,16 +1,17 @@
 import React, { FunctionComponent, memo, useCallback } from 'react';
 import { Rect, Group, Line } from 'react-konva';
-import { AxisProps } from '../axis.interface';
 import { XTick } from './xTick';
 import {
   DragInteraction,
   useDragInteraction,
 } from '../../transform/_hooks/useDragInteraction';
 import { useXTransformer } from '../../transform/_hooks/useXTransformer';
+import { useDimension } from '../../dimension/useDimension';
 
-const XAxisComponent: FunctionComponent<AxisProps> = (props) => {
-  const { width, height, size } = props;
-  const y = height - size + 0.5;
+const XAxisComponent: FunctionComponent = () => {
+  const { width, height, yAxisSize, xAxisSize } = useDimension();
+
+  const y = height - xAxisSize + 0.5;
 
   const { transform, setScale } = useXTransformer();
 
@@ -34,8 +35,18 @@ const XAxisComponent: FunctionComponent<AxisProps> = (props) => {
 
   return (
     <Group onDblClick={onDblClick} onMouseDown={onMouseDown}>
-      <Rect x={0} y={y} height={size} width={width} fill="transparent" />
-      <Line points={[0, y, width, y]} stroke="black" strokeWidth={1} />
+      <Rect
+        x={0}
+        y={y}
+        height={xAxisSize}
+        width={width - yAxisSize}
+        fill="transparent"
+      />
+      <Line
+        points={[0, y, width - yAxisSize, y]}
+        stroke="black"
+        strokeWidth={1}
+      />
       {transform.ticks().map((tick) => {
         const x = transform(tick);
         const text = format(tick);
