@@ -9,7 +9,7 @@ import { useXTransformer } from '../../transform/_hooks/useXTransformer';
 import { useDimension } from '../../dimension/useDimension';
 
 const XAxisComponent: FunctionComponent = () => {
-  const { width, height, yAxisSize, xAxisSize } = useDimension();
+  const { width, height, xAxisSize } = useDimension();
 
   const y = height - xAxisSize + 0.5;
 
@@ -35,18 +35,8 @@ const XAxisComponent: FunctionComponent = () => {
 
   return (
     <Group onDblClick={onDblClick} onMouseDown={onMouseDown}>
-      <Rect
-        x={0}
-        y={y}
-        height={xAxisSize}
-        width={width - yAxisSize}
-        fill="transparent"
-      />
-      <Line
-        points={[0, y, width - yAxisSize, y]}
-        stroke="black"
-        strokeWidth={1}
-      />
+      <Rect x={0} y={y} height={xAxisSize} width={width} fill="white" />
+      <Line points={[0, y, width, y]} stroke="black" strokeWidth={1} />
       {transform.ticks().map((tick) => {
         const x = transform(tick);
         const text = format(tick);

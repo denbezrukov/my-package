@@ -41,8 +41,7 @@ storiesOf('Interactive Stage', module)
       <InteractiveStage
         xDomain={xDomain}
         yDomain={yDomain}
-        width={width}
-        height={height}
+        dimension={dimension}
       >
         <DimensionContext.Provider value={dimension}>
           <Layer>

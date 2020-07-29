@@ -15,23 +15,24 @@ import {
 const InteractiveStageComponent: FunctionComponent<InteractiveStageProps> = (
   props,
 ) => {
-  const { xDomain, yDomain, children, width, height, ...restProps } = props;
+  const { xDomain, yDomain, children, dimension, ...restProps } = props;
+  const { width, height, xAxisSize, yAxisSize } = dimension;
 
   const xTransformerConfig = useMemo<TransformerConfig>(() => {
     return {
       domain: xDomain,
-      range: [0, width ?? 0],
+      range: [0, (width ?? 0) - yAxisSize],
     };
-  }, [xDomain, width]);
+  }, [xDomain, width, yAxisSize]);
 
   const xTransformer = useTransformerState(xTransformerConfig);
 
   const yTransformerConfig = useMemo<TransformerConfig>(() => {
     return {
       domain: yDomain,
-      range: [0, height ?? 0],
+      range: [0, (height ?? 0) - xAxisSize],
     };
-  }, [yDomain, height]);
+  }, [yDomain, height, xAxisSize]);
 
   const yTransformer = useTransformerState(yTransformerConfig);
 
@@ -49,10 +50,16 @@ const InteractiveStageComponent: FunctionComponent<InteractiveStageProps> = (
   );
   const onMouseDown = useDragInteraction(onMove);
 
+  const onDblClick = useCallback(() => {
+    xTransformer.setShift(() => 0);
+    yTransformer.setShift(() => 0);
+  }, [yTransformer, xTransformer]);
+
   return (
     <Stage
       {...restProps}
       onMouseDown={onMouseDown}
+      onDblClick={onDblClick}
       width={width}
       height={height}
     >

@@ -23,6 +23,8 @@ export const useDragInteraction = (callback: DragInteraction) => {
 
   return useCallback(
     (event: Konva.KonvaEventObject<MouseEvent>) => {
+      // eslint-disable-next-line no-param-reassign
+      event.cancelBubble = true;
       const { clientX, clientY } = event.evt;
       point.current = {
         x: clientX,

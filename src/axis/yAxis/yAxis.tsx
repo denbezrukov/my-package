@@ -9,7 +9,7 @@ import { useYTransformer } from '../../transform/_hooks/useYTransformer';
 import { useDimension } from '../../dimension/useDimension';
 
 const YAxisComponent: FunctionComponent = () => {
-  const { width, height, yAxisSize, xAxisSize } = useDimension();
+  const { width, height, yAxisSize } = useDimension();
   const x = width - yAxisSize + 0.5;
 
   const { transform, setScale } = useYTransformer();
@@ -34,18 +34,8 @@ const YAxisComponent: FunctionComponent = () => {
 
   return (
     <Group onDblClick={onDblClick} onMouseDown={onMouseDown}>
-      <Rect
-        x={x}
-        y={0}
-        height={height - xAxisSize}
-        width={yAxisSize}
-        fill="transparent"
-      />
-      <Line
-        points={[x, 0, x, height - xAxisSize]}
-        stroke="black"
-        strokeWidth={1}
-      />
+      <Rect x={x} y={0} height={height} width={yAxisSize} fill="white" />
+      <Line points={[x, 0, x, height]} stroke="black" strokeWidth={1} />
       {transform.ticks().map((tick) => {
         const y = transform(tick);
         const text = format(tick);
