@@ -1,14 +1,9 @@
 {
-  "name": "my-package",
-  "version": "1.0.0",
-  "main": "lib/index.js",
-  "module": "es/index.js",
-  "typings": "lib/index.d.ts",
   "license": "MIT",
-  "files": [
-    "dist/",
-    "es/",
-    "lib/"
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "examples/*"
   ],
   "scripts": {
     "test": "jest",

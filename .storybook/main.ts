@@ -2,7 +2,7 @@ import { Configuration, DefinePlugin } from 'webpack';
 import { withKnobs } from '@storybook/addon-knobs';
 
 export default {
-  stories: ['../src/**/*.story.tsx'],
+  stories: ['../packages/**/*.story.tsx', '../examples/**/*.story.tsx'],
   addons: [
     '@storybook/addon-knobs/register',
     '@storybook/addon-actions',

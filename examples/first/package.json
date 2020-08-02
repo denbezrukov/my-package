@@ -1,0 +1,16 @@
+{
+  "name": "first",
+  "version": "1.0.0",
+  "devDependencies": {
+    "@storybook/react": "^5.3.19",
+    "@storybook/addon-knobs": "^5.3.19"
+  },
+  "dependencies": {
+    "@types/d3-scale": "^2.2.0",
+    "d3-scale": "^3.2.1",
+    "konva": "^7.0.3",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-konva": "^16.13.0-3"
+  }
+}
