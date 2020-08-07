@@ -2,7 +2,7 @@ import { useMemo, useState, useEffect, useRef } from 'react';
 import { Transformer, TransformerConfig } from '../transform.interface';
 import { createTransformer } from '../createTransformer';
 
-export const useTransformerState = (config: TransformerConfig): Transformer => {
+export const useTransformerState = <Domain>(config: TransformerConfig<Domain>): Transformer<Domain> => {
   const [transformer, setTransformer] = useState(() => {
     return createTransformer(config);
   });
@@ -17,14 +17,14 @@ export const useTransformerState = (config: TransformerConfig): Transformer => {
   }, [ref, setTransformer, config]);
 
   return useMemo(() => {
-    const setShift: Transformer['setShift'] = (action) => {
+    const setShift: Transformer<Domain>['setShift'] = (action) => {
       transformer.setShift(action);
       setTransformer({
         ...transformer,
       });
     };
 
-    const setScale: Transformer['setScale'] = (action) => {
+    const setScale: Transformer<Domain>['setScale'] = (action) => {
       transformer.setScale(action);
       setTransformer({
         ...transformer,

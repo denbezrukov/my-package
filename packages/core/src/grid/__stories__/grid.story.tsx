@@ -4,12 +4,11 @@ import { Layer, Stage } from 'react-konva';
 import { number, withKnobs } from '@storybook/addon-knobs';
 import { scaleLinear } from 'd3-scale';
 import {
-  XTransformerContext,
-  YTransformerContext,
+  XTransformerContextFactory,
+  YTransformerContextFactory,
 } from '../../transform/transformerContext';
 import { useTransformerState } from '../../transform/_hooks/useTransformerState';
 
-import { TransformerConfig } from '../../transform/transform.interface';
 import { Grid } from '../grid';
 import { DimensionContext } from '../../dimension/dimensionContext';
 
@@ -21,7 +20,7 @@ storiesOf('Grid', module)
     const from = number('from', 0);
     const to = number('to', 100);
 
-    const xTransformerConfig = useMemo<TransformerConfig>(() => {
+    const xTransformerConfig = useMemo(() => {
       return {
         scale: scaleLinear()
           .domain([from, to])
@@ -31,7 +30,7 @@ storiesOf('Grid', module)
 
     const xTransformer = useTransformerState(xTransformerConfig);
 
-    const yTransformerConfig = useMemo<TransformerConfig>(() => {
+    const yTransformerConfig = useMemo(() => {
       return {
         scale: scaleLinear()
           .domain([from, to])
@@ -53,13 +52,13 @@ storiesOf('Grid', module)
     return (
       <Stage width={width} height={height}>
         <DimensionContext.Provider value={dimension}>
-          <XTransformerContext.Provider value={xTransformer}>
-            <YTransformerContext.Provider value={yTransformer}>
+          <XTransformerContextFactory.Provider value={xTransformer}>
+            <YTransformerContextFactory.Provider value={yTransformer}>
               <Layer>
                 <Grid />
               </Layer>
-            </YTransformerContext.Provider>
-          </XTransformerContext.Provider>
+            </YTransformerContextFactory.Provider>
+          </XTransformerContextFactory.Provider>
         </DimensionContext.Provider>
       </Stage>
     );

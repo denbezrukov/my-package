@@ -5,8 +5,8 @@ import { Layer, Stage, Rect, Text } from 'react-konva';
 import { number, withKnobs } from '@storybook/addon-knobs';
 import { XAxis } from '../xAxis/xAxis';
 import {
-  XTransformerContext,
-  YTransformerContext,
+  XTransformerContextFactory,
+  YTransformerContextFactory,
 } from '../../transform/transformerContext';
 import { useTransformerState } from '../../transform/_hooks/useTransformerState';
 import { YAxis } from '../yAxis/yAxis';
@@ -29,7 +29,7 @@ storiesOf('Axis', module)
     const from = number('from', 0);
     const to = number('to', 100);
 
-    const config = useMemo<TransformerConfig>(() => {
+    const config = useMemo(() => {
       return {
         scale: scaleLinear().domain([from, to]).range([0, width]),
       };
@@ -49,9 +49,9 @@ storiesOf('Axis', module)
     return (
       <Stage width={width} height={height}>
         <DimensionContext.Provider value={dimension}>
-          <XTransformerContext.Provider value={transformer}>
+          <XTransformerContextFactory.Provider value={transformer}>
             <XInteractionStage />
-          </XTransformerContext.Provider>
+          </XTransformerContextFactory.Provider>
         </DimensionContext.Provider>
       </Stage>
     );
@@ -63,7 +63,7 @@ storiesOf('Axis', module)
     const from = number('from', 0);
     const to = number('to', 100);
 
-    const config = useMemo<TransformerConfig>(() => {
+    const config = useMemo(() => {
       return {
         scale: scaleLinear().domain([from, to]).range([height, 0]),
       };
@@ -82,9 +82,9 @@ storiesOf('Axis', module)
     return (
       <Stage width={width} height={height}>
         <DimensionContext.Provider value={dimension}>
-          <YTransformerContext.Provider value={transformer}>
+          <YTransformerContextFactory.Provider value={transformer}>
             <YInteractionStage />
-          </YTransformerContext.Provider>
+          </YTransformerContextFactory.Provider>
         </DimensionContext.Provider>
       </Stage>
     );

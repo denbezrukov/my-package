@@ -1,8 +1,8 @@
 import { useContext } from 'react';
-import { XTransformerContext } from '../transformerContext';
+import { XTransformerContextFactory } from '../transformerContext';
 
-export const useXTransformer = () => {
-  const transformer = useContext(XTransformerContext);
+export const useXTransformer = <Domain>() => {
+  const transformer = useContext(XTransformerContextFactory<Domain>());
 
   if (transformer) {
     return transformer;

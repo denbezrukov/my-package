@@ -3,10 +3,9 @@ import { Stage } from 'react-konva';
 import { scaleLinear } from 'd3-scale';
 import { InteractiveStageProps } from './interactiveStage.interface';
 import { useTransformerState } from '../transform/_hooks/useTransformerState';
-import { TransformerConfig } from '../transform/transform.interface';
 import {
-  XTransformerContext,
-  YTransformerContext,
+  XTransformerContextFactory,
+  YTransformerContextFactory,
 } from '../transform/transformerContext';
 import {
   DragInteraction,
@@ -14,13 +13,17 @@ import {
 } from '../transform/_hooks/useDragInteraction';
 import { DimensionContext } from '../dimension/dimensionContext';
 
+
+export const XTransformerContext = XTransformerContextFactory<number>();
+export const YTransformerContext = YTransformerContextFactory<number>();
+
 const InteractiveStageComponent: FunctionComponent<InteractiveStageProps> = (
   props,
 ) => {
   const { xDomain, yDomain, children, dimension, ...restProps } = props;
   const { width, height, xAxisSize, yAxisSize } = dimension;
 
-  const xTransformerConfig = useMemo<TransformerConfig>(() => {
+  const xTransformerConfig = useMemo(() => {
     return {
       scale: scaleLinear()
         .domain(xDomain)
@@ -30,7 +33,7 @@ const InteractiveStageComponent: FunctionComponent<InteractiveStageProps> = (
 
   const xTransformer = useTransformerState(xTransformerConfig);
 
-  const yTransformerConfig = useMemo<TransformerConfig>(() => {
+  const yTransformerConfig = useMemo(() => {
     return {
       scale: scaleLinear()
         .domain(yDomain)
