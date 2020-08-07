@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { storiesOf } from '@storybook/react';
 import { Layer, Stage } from 'react-konva';
 import { number, withKnobs } from '@storybook/addon-knobs';
+import { scaleLinear } from 'd3-scale';
 import {
   XTransformerContext,
   YTransformerContext,
@@ -22,8 +23,9 @@ storiesOf('Grid', module)
 
     const xTransformerConfig = useMemo<TransformerConfig>(() => {
       return {
-        domain: [from, to],
-        range: [10, width - 10],
+        scale: scaleLinear()
+          .domain([from, to])
+          .range([10, width - 10]),
       };
     }, [from, to, width]);
 
@@ -31,8 +33,9 @@ storiesOf('Grid', module)
 
     const yTransformerConfig = useMemo<TransformerConfig>(() => {
       return {
-        domain: [from, to],
-        range: [10, width - 10],
+        scale: scaleLinear()
+          .domain([from, to])
+          .range([10, width - 10]),
       };
     }, [from, to, width]);
 

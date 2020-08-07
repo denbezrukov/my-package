@@ -16,7 +16,7 @@ export const XTickComponent: FunctionComponent<TickProps> = (props) => {
   return (
     <>
       <Line points={[x, y, x, y + size]} stroke="black" strokeWidth={1} />
-      <Text ref={ref} x={x} y={y + size + 5} text={text} />
+      <Text align="center" ref={ref} x={x} y={y + size + 5} text={text} />
     </>
   );
 };

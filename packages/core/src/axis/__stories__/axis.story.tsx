@@ -1,4 +1,5 @@
 import React, { FunctionComponent, useCallback, useMemo } from 'react';
+import { scaleLinear } from 'd3-scale';
 import { storiesOf } from '@storybook/react';
 import { Layer, Stage, Rect, Text } from 'react-konva';
 import { number, withKnobs } from '@storybook/addon-knobs';
@@ -30,8 +31,7 @@ storiesOf('Axis', module)
 
     const config = useMemo<TransformerConfig>(() => {
       return {
-        domain: [from, to],
-        range: [0, width],
+        scale: scaleLinear().domain([from, to]).range([0, width]),
       };
     }, [from, to, width]);
 
@@ -65,10 +65,9 @@ storiesOf('Axis', module)
 
     const config = useMemo<TransformerConfig>(() => {
       return {
-        domain: [from, to],
-        range: [0, width],
+        scale: scaleLinear().domain([from, to]).range([height, 0]),
       };
-    }, [from, to, width]);
+    }, [from, to, height]);
 
     const transformer = useTransformerState(config);
     const dimension = useMemo(() => {

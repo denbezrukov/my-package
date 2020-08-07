@@ -6,7 +6,6 @@ import { InteractiveStage } from '../interactiveStage';
 import { Grid } from '../../grid/grid';
 import { XAxis } from '../../axis/xAxis/xAxis';
 import { YAxis } from '../../axis/yAxis/yAxis';
-import { DimensionContext } from '../../dimension/dimensionContext';
 
 storiesOf('Interactive Stage', module)
   .addDecorator(withKnobs)
@@ -39,19 +38,17 @@ storiesOf('Interactive Stage', module)
 
     return (
       <InteractiveStage
+        dimension={dimension}
         xDomain={xDomain}
         yDomain={yDomain}
-        dimension={dimension}
       >
-        <DimensionContext.Provider value={dimension}>
-          <Layer>
-            <Grid />
-          </Layer>
-          <Layer>
-            <XAxis />
-            <YAxis />
-          </Layer>
-        </DimensionContext.Provider>
+        <Layer>
+          <Grid />
+        </Layer>
+        <Layer>
+          <XAxis />
+          <YAxis />
+        </Layer>
       </InteractiveStage>
     );
   });

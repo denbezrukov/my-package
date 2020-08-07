@@ -1,5 +1,6 @@
 {
   "name": "core",
+  "main": "./src/index",
   "version": "1.0.0",
   "devDependencies": {
     "@storybook/addon-knobs": "^5.3.19",

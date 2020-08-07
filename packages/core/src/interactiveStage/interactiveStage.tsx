@@ -1,5 +1,6 @@
 import React, { FunctionComponent, memo, useCallback, useMemo } from 'react';
 import { Stage } from 'react-konva';
+import { scaleLinear } from 'd3-scale';
 import { InteractiveStageProps } from './interactiveStage.interface';
 import { useTransformerState } from '../transform/_hooks/useTransformerState';
 import { TransformerConfig } from '../transform/transform.interface';
@@ -11,6 +12,7 @@ import {
   DragInteraction,
   useDragInteraction,
 } from '../transform/_hooks/useDragInteraction';
+import { DimensionContext } from '../dimension/dimensionContext';
 
 const InteractiveStageComponent: FunctionComponent<InteractiveStageProps> = (
   props,
@@ -20,8 +22,9 @@ const InteractiveStageComponent: FunctionComponent<InteractiveStageProps> = (
 
   const xTransformerConfig = useMemo<TransformerConfig>(() => {
     return {
-      domain: xDomain,
-      range: [0, (width ?? 0) - yAxisSize],
+      scale: scaleLinear()
+        .domain(xDomain)
+        .range([0, (width ?? 0) - yAxisSize]),
     };
   }, [xDomain, width, yAxisSize]);
 
@@ -29,8 +32,9 @@ const InteractiveStageComponent: FunctionComponent<InteractiveStageProps> = (
 
   const yTransformerConfig = useMemo<TransformerConfig>(() => {
     return {
-      domain: yDomain,
-      range: [0, (height ?? 0) - xAxisSize],
+      scale: scaleLinear()
+        .domain(yDomain)
+        .range([(height ?? 0) + xAxisSize, 0]),
     };
   }, [yDomain, height, xAxisSize]);
 
@@ -63,11 +67,13 @@ const InteractiveStageComponent: FunctionComponent<InteractiveStageProps> = (
       width={width}
       height={height}
     >
-      <XTransformerContext.Provider value={xTransformer}>
-        <YTransformerContext.Provider value={yTransformer}>
-          {children}
-        </YTransformerContext.Provider>
-      </XTransformerContext.Provider>
+      <DimensionContext.Provider value={dimension}>
+        <XTransformerContext.Provider value={xTransformer}>
+          <YTransformerContext.Provider value={yTransformer}>
+            {children}
+          </YTransformerContext.Provider>
+        </XTransformerContext.Provider>
+      </DimensionContext.Provider>
     </Stage>
   );
 };

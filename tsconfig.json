@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": "./",
     "target": "es5",
     "declaration": true,
     "module": "commonjs",
@@ -8,6 +9,7 @@
     "moduleResolution": "node",
     "sourceMap": true,
     "jsx": "react",
+    "resolveJsonModule": true,
     "esModuleInterop": true,
     "downlevelIteration": true,
     "noUnusedLocals": true
