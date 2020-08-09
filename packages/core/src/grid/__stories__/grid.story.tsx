@@ -12,6 +12,9 @@ import { useTransformerState } from '../../transform/_hooks/useTransformerState'
 import { Grid } from '../grid';
 import { DimensionContext } from '../../dimension/dimensionContext';
 
+const XTransformerContext = XTransformerContextFactory<number>();
+const YTransformerContext = YTransformerContextFactory<number>();
+
 storiesOf('Grid', module)
   .addDecorator(withKnobs)
   .add('Grid', () => {
@@ -52,13 +55,13 @@ storiesOf('Grid', module)
     return (
       <Stage width={width} height={height}>
         <DimensionContext.Provider value={dimension}>
-          <XTransformerContextFactory.Provider value={xTransformer}>
-            <YTransformerContextFactory.Provider value={yTransformer}>
+          <XTransformerContext.Provider value={xTransformer}>
+            <YTransformerContext.Provider value={yTransformer}>
               <Layer>
                 <Grid />
               </Layer>
-            </YTransformerContextFactory.Provider>
-          </XTransformerContextFactory.Provider>
+            </YTransformerContext.Provider>
+          </XTransformerContext.Provider>
         </DimensionContext.Provider>
       </Stage>
     );
