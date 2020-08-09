@@ -1,7 +1,6 @@
 import { createContext, useContext } from 'react';
 import { Transformer } from './transform.interface';
 
-
 export const createTransformerContext = <Domain>() => {
   const context = createContext<Transformer<Domain> | undefined>(undefined);
 
@@ -16,11 +15,9 @@ export const createTransformerContext = <Domain>() => {
   };
 
   return [useTransformer, context] as const;
-}
+};
 
-export const XTransformerContextFactory = <Domain>() => createContext<Transformer<Domain> | undefined>(
-  undefined,
-);
-export const YTransformerContextFactory = <Domain>() => createContext<Transformer<Domain> | undefined>(
-  undefined,
-);
+export const XTransformerContextFactory = <Domain>() =>
+  createContext<Transformer<Domain> | undefined>(undefined);
+export const YTransformerContextFactory = <Domain>() =>
+  createContext<Transformer<Domain> | undefined>(undefined);

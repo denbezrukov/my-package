@@ -2,7 +2,9 @@ import { useMemo, useState, useEffect, useRef } from 'react';
 import { Transformer, TransformerConfig } from '../transform.interface';
 import { createTransformer } from '../createTransformer';
 
-export const useTransformerState = <Domain>(config: TransformerConfig<Domain>): Transformer<Domain> => {
+export const useTransformerState = <Domain>(
+  config: TransformerConfig<Domain>,
+): Transformer<Domain> => {
   const [transformer, setTransformer] = useState(() => {
     return createTransformer(config);
   });
