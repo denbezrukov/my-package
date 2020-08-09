@@ -7,13 +7,14 @@ import {
 } from '../../transform/_hooks/useDragInteraction';
 import { useXTransformer } from '../../transform/_hooks/useXTransformer';
 import { useDimension } from '../../dimension/useDimension';
+import Konva from 'konva';
 
 const XAxisComponent: FunctionComponent = () => {
   const { width, height, xAxisSize } = useDimension();
 
   const y = height - xAxisSize + 0.5;
 
-  const { transform, setScale } = useXTransformer();
+  const { transform, setScale, setOffset } = useXTransformer();
 
   const format = transform.tickFormat();
 
@@ -31,7 +32,12 @@ const XAxisComponent: FunctionComponent = () => {
     [setScale],
   );
 
-  const onMouseDown = useDragInteraction(onMove);
+  const dragInteraction = useDragInteraction(onMove);
+  const onMouseDown = useCallback((event: Konva.KonvaEventObject<MouseEvent>) => {
+    const {clientX} = event.evt;
+    setOffset(() => transform.invert(clientX));
+    dragInteraction(event);
+  }, [dragInteraction])
 
   return (
     <Group onDblClick={onDblClick} onMouseDown={onMouseDown}>

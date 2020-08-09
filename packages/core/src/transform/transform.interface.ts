@@ -2,6 +2,7 @@ import { InterpolatorFactory } from 'd3-scale';
 
 export interface Scale<Domain> {
   (value: Domain): number;
+  invert(value: number): Domain;
   domain(): Domain[];
   range(): number[];
   range(range: number[]): this;
@@ -18,6 +19,7 @@ export interface Transformer<Domain> {
   transform: Scale<Domain>;
   setShift: (setShift: (shift: number) => number) => void;
   setScale: (setScale: (scale: number) => number) => void;
+  setOffset: (setOffset: (offset: Domain) => Domain) => void;
 }
 
 export interface Point {

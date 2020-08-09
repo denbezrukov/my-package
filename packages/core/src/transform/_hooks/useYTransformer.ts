@@ -1,11 +1,12 @@
 import { useContext } from 'react';
-import { YTransformerContextFactory } from '../transformerContext';
+import { YTransformerContext } from '../transformerContext';
+import { Transformer } from '../transform.interface';
 
 export const useYTransformer = <Domain>() => {
-  const transformer = useContext(YTransformerContextFactory<Domain>());
+  const transformer = useContext(YTransformerContext);
 
   if (transformer) {
-    return transformer;
+    return transformer as Transformer<Domain>;
   }
 
   throw new Error('Transformer is undefined');

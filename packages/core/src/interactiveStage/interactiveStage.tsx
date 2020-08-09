@@ -4,18 +4,14 @@ import { scaleLinear } from 'd3-scale';
 import { InteractiveStageProps } from './interactiveStage.interface';
 import { useTransformerState } from '../transform/_hooks/useTransformerState';
 import {
-  XTransformerContextFactory,
-  YTransformerContextFactory,
+  XTransformerContext,
+  YTransformerContext,
 } from '../transform/transformerContext';
 import {
   DragInteraction,
   useDragInteraction,
 } from '../transform/_hooks/useDragInteraction';
 import { DimensionContext } from '../dimension/dimensionContext';
-
-
-export const XTransformerContext = XTransformerContextFactory<number>();
-export const YTransformerContext = YTransformerContextFactory<number>();
 
 const InteractiveStageComponent: FunctionComponent<InteractiveStageProps> = (
   props,

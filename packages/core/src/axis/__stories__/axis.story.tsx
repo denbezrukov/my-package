@@ -5,8 +5,8 @@ import { Layer, Stage, Rect, Text } from 'react-konva';
 import { number, withKnobs } from '@storybook/addon-knobs';
 import { XAxis } from '../xAxis/xAxis';
 import {
-  XTransformerContextFactory,
-  YTransformerContextFactory,
+  XTransformerContext,
+  YTransformerContext,
 } from '../../transform/transformerContext';
 import { useTransformerState } from '../../transform/_hooks/useTransformerState';
 import { YAxis } from '../yAxis/yAxis';
@@ -18,9 +18,6 @@ import { useYTransformer } from '../../transform/_hooks/useYTransformer';
 import { useXTransformer } from '../../transform/_hooks/useXTransformer';
 import { DimensionContext } from '../../dimension/dimensionContext';
 import { useDimension } from '../../dimension/useDimension';
-
-const YTransformerContext = YTransformerContextFactory<number>();
-const XTransformerContext = XTransformerContextFactory<number>();
 
 storiesOf('Axis', module)
   .addDecorator(withKnobs)

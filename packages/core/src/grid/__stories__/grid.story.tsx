@@ -4,16 +4,13 @@ import { Layer, Stage } from 'react-konva';
 import { number, withKnobs } from '@storybook/addon-knobs';
 import { scaleLinear } from 'd3-scale';
 import {
-  XTransformerContextFactory,
-  YTransformerContextFactory,
+  XTransformerContext,
+  YTransformerContext,
 } from '../../transform/transformerContext';
 import { useTransformerState } from '../../transform/_hooks/useTransformerState';
 
 import { Grid } from '../grid';
 import { DimensionContext } from '../../dimension/dimensionContext';
-
-const XTransformerContext = XTransformerContextFactory<number>();
-const YTransformerContext = YTransformerContextFactory<number>();
 
 storiesOf('Grid', module)
   .addDecorator(withKnobs)
