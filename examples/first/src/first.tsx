@@ -4,13 +4,19 @@ import { Layer, Path } from 'react-konva';
 import { extent } from 'd3-array';
 import { line } from 'd3-shape';
 import {
+  DimensionContext,
   InteractiveStage,
+  useTransformerState,
   useXTransformer,
   useYTransformer,
+  Grid,
   XAxis,
   YAxis,
+  YTransformerContext,
+  XTransformerContext,
 } from 'core';
 import { FirstProps } from './first.interface';
+import { scaleLinear, scaleTime } from 'd3-scale';
 
 const Line: FunctionComponent = () => {
   const { transform: xTransform } = useXTransformer();
@@ -19,22 +25,22 @@ const Line: FunctionComponent = () => {
   const data = line()
     .x((d) => xTransform(d[0]))
     .y((d) => yTransform(d[1]))(
-    weatherList.map((weather) => {
-      const x = new Date(weather.date);
+      weatherList.map((weather) => {
+        const x = new Date(weather.date);
 
-      return [x.getTime(), weather.temperatureMax];
-    }),
-  );
+        return [x.getTime(), weather.temperatureMax];
+      }),
+    );
 
   return data !== null ? (
-    <Path data={data} fill="transparent" strokeWidth={2} stroke="#af9358" />
+    <Path data={data} fill="transparent" strokeWidth={2} stroke="#af9358"/>
   ) : null;
 };
 
 const FirstChartComponent: FunctionComponent<FirstProps> = (props) => {
   const { width, height } = props;
   const yAxisSize = 50;
-  const xAxisSize = 20;
+  const xAxisSize = 30;
 
   const xDomain = useMemo<[number, number]>(() => {
     const [min, max] = extent(weatherList, (weather) => {
@@ -57,16 +63,43 @@ const FirstChartComponent: FunctionComponent<FirstProps> = (props) => {
     };
   }, [width, height, xAxisSize, yAxisSize]);
 
+  const xTransformerConfig = useMemo(() => {
+    return {
+      scale: scaleTime()
+        .domain(xDomain)
+        .range([0, (width ?? 0) - yAxisSize]),
+    };
+  }, [xDomain, width, yAxisSize]);
+
+  const xTransformer = useTransformerState(xTransformerConfig);
+
+  const yTransformerConfig = useMemo(() => {
+    return {
+      scale: scaleLinear()
+        .domain(yDomain)
+        .range([(height ?? 0) + xAxisSize, 0]),
+    };
+  }, [yDomain, height, xAxisSize]);
+
+  const yTransformer = useTransformerState(yTransformerConfig);
+
   return (
-    <InteractiveStage dimension={dimension} xDomain={xDomain} yDomain={yDomain}>
-      <Layer>
-        <Line />
-      </Layer>
-      <Layer>
-        <XAxis />
-        <YAxis />
-      </Layer>
-    </InteractiveStage>
+    <DimensionContext.Provider value={dimension}>
+      <XTransformerContext.Provider value={xTransformer}>
+        <YTransformerContext.Provider value={yTransformer}>
+          <InteractiveStage>
+            <Layer>
+              <Grid/>
+              <Line/>
+            </Layer>
+            <Layer>
+              <XAxis/>
+              <YAxis/>
+            </Layer>
+          </InteractiveStage>
+        </YTransformerContext.Provider>
+      </XTransformerContext.Provider>
+    </DimensionContext.Provider>
   );
 };
 

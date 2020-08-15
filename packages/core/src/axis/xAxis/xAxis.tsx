@@ -43,10 +43,10 @@ const XAxisComponent: FunctionComponent = () => {
     <Group onDblClick={onDblClick} onMouseDown={onMouseDown}>
       <Rect x={0} y={y} height={xAxisSize} width={width} fill="white" />
       <Line points={[0, y, width, y]} stroke="black" strokeWidth={1} />
-      {transform.ticks().map((tick) => {
+      {transform.ticks().map((tick, index) => {
         const x = transform(tick);
         const text = format(tick);
-        const key = `${x}:${y}`;
+        const key = `${x}:${y}:${index}`;
 
         return <XTick key={key} x={x} y={y} text={text} />;
       })}

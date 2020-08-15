@@ -1,8 +1,6 @@
-import React, { FunctionComponent, memo, useCallback, useMemo } from 'react';
+import React, { FunctionComponent, memo, useCallback } from 'react';
 import { Stage } from 'react-konva';
-import { scaleLinear } from 'd3-scale';
 import { InteractiveStageProps } from './interactiveStage.interface';
-import { useTransformerState } from '../transform/_hooks/useTransformerState';
 import {
   XTransformerContext,
   YTransformerContext,
@@ -12,32 +10,18 @@ import {
   useDragInteraction,
 } from '../transform/_hooks/useDragInteraction';
 import { DimensionContext } from '../dimension/dimensionContext';
+import { useXTransformer } from '../transform/_hooks/useXTransformer';
+import { useYTransformer } from '../transform/_hooks/useYTransformer';
+import { useDimension } from '../dimension/useDimension';
 
 const InteractiveStageComponent: FunctionComponent<InteractiveStageProps> = (
   props,
 ) => {
-  const { xDomain, yDomain, children, dimension, ...restProps } = props;
-  const { width, height, xAxisSize, yAxisSize } = dimension;
+  const { children, ...restProps } = props;
 
-  const xTransformerConfig = useMemo(() => {
-    return {
-      scale: scaleLinear()
-        .domain(xDomain)
-        .range([0, (width ?? 0) - yAxisSize]),
-    };
-  }, [xDomain, width, yAxisSize]);
-
-  const xTransformer = useTransformerState(xTransformerConfig);
-
-  const yTransformerConfig = useMemo(() => {
-    return {
-      scale: scaleLinear()
-        .domain(yDomain)
-        .range([(height ?? 0) + xAxisSize, 0]),
-    };
-  }, [yDomain, height, xAxisSize]);
-
-  const yTransformer = useTransformerState(yTransformerConfig);
+  const xTransformer = useXTransformer();
+  const yTransformer = useYTransformer();
+  const dimension = useDimension();
 
   const onMove: DragInteraction = useCallback(
     (event, point) => {
@@ -63,8 +47,8 @@ const InteractiveStageComponent: FunctionComponent<InteractiveStageProps> = (
       {...restProps}
       onMouseDown={onMouseDown}
       onDblClick={onDblClick}
-      width={width}
-      height={height}
+      width={dimension.width}
+      height={dimension.height}
     >
       <DimensionContext.Provider value={dimension}>
         <XTransformerContext.Provider value={xTransformer}>

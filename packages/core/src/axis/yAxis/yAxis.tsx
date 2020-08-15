@@ -42,10 +42,10 @@ const YAxisComponent: FunctionComponent = () => {
     <Group onDblClick={onDblClick} onMouseDown={onMouseDown}>
       <Rect x={x} y={0} height={height} width={yAxisSize} fill="white" />
       <Line points={[x, 0, x, height]} stroke="black" strokeWidth={1} />
-      {transform.ticks().map((tick) => {
+      {transform.ticks().map((tick, index) => {
         const y = transform(tick);
         const text = format(tick);
-        const key = `${x}:${y}`;
+        const key = `${x}:${y}:${index}`;
 
         return <YTick key={key} x={x} y={y} text={text} />;
       })}

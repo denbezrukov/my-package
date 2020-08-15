@@ -6,6 +6,10 @@ import { InteractiveStage } from '../interactiveStage';
 import { Grid } from '../../grid/grid';
 import { XAxis } from '../../axis/xAxis/xAxis';
 import { YAxis } from '../../axis/yAxis/yAxis';
+import { DimensionContext } from '../../dimension/dimensionContext';
+import { scaleLinear } from 'd3-scale';
+import { useTransformerState } from '../../transform/_hooks/useTransformerState';
+import { XTransformerContext, YTransformerContext } from '../../transform/transformerContext';
 
 storiesOf('Interactive Stage', module)
   .addDecorator(withKnobs)
@@ -36,19 +40,44 @@ storiesOf('Interactive Stage', module)
       };
     }, [width, height, xAxisSize, yAxisSize]);
 
+    const xTransformerConfig = useMemo(() => {
+      return {
+        scale: scaleLinear()
+          .domain(xDomain)
+          .range([0, (width ?? 0) - yAxisSize]),
+      };
+    }, [xDomain, width, yAxisSize]);
+
+    const xTransformer = useTransformerState(xTransformerConfig);
+
+    const yTransformerConfig = useMemo(() => {
+      return {
+        scale: scaleLinear()
+          .domain(yDomain)
+          .range([(height ?? 0) + xAxisSize, 0]),
+      };
+    }, [yDomain, height, xAxisSize]);
+
+    const yTransformer = useTransformerState(yTransformerConfig);
+
     return (
-      <InteractiveStage
-        dimension={dimension}
-        xDomain={xDomain}
-        yDomain={yDomain}
-      >
-        <Layer>
-          <Grid />
-        </Layer>
-        <Layer>
-          <XAxis />
-          <YAxis />
-        </Layer>
-      </InteractiveStage>
+      <DimensionContext.Provider value={dimension}>
+        <XTransformerContext.Provider value={xTransformer}>
+          <YTransformerContext.Provider value={yTransformer}>
+            <InteractiveStage
+              xDomain={xDomain}
+              yDomain={yDomain}
+            >
+              <Layer>
+                <Grid/>
+              </Layer>
+              <Layer>
+                <XAxis/>
+                <YAxis/>
+              </Layer>
+            </InteractiveStage>
+          </YTransformerContext.Provider>
+        </XTransformerContext.Provider>
+      </DimensionContext.Provider>
     );
   });
