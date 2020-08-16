@@ -1,5 +1,6 @@
-export { XAxis } from './axis/xAxis/xAxis';
-export { YAxis } from './axis/yAxis/yAxis';
+export { LeftAxis } from './axis/leftAxis/leftAxis';
+export { BottomAxis } from './axis/botomAxis/bottomAxis';
+export { RightAxis } from './axis/rightAxis/rightAxis';
 export { Grid } from './grid/grid';
 export { useTransformerState } from './transform/_hooks/useTransformerState';
 export { TransformerConfig } from './transform/transform.interface';

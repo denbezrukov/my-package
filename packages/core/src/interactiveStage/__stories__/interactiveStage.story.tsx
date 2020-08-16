@@ -3,9 +3,9 @@ import { storiesOf } from '@storybook/react';
 import { Layer } from 'react-konva';
 import { number, withKnobs } from '@storybook/addon-knobs';
 import { InteractiveStage } from '../interactiveStage';
+import {BottomAxis} from '../../axis/botomAxis/bottomAxis';
+import {RightAxis} from '../../axis/rightAxis/rightAxis';
 import { Grid } from '../../grid/grid';
-import { XAxis } from '../../axis/xAxis/xAxis';
-import { YAxis } from '../../axis/yAxis/yAxis';
 import { DimensionContext } from '../../dimension/dimensionContext';
 import { scaleLinear } from 'd3-scale';
 import { useTransformerState } from '../../transform/_hooks/useTransformerState';
@@ -72,8 +72,8 @@ storiesOf('Interactive Stage', module)
                 <Grid/>
               </Layer>
               <Layer>
-                <XAxis/>
-                <YAxis/>
+                <BottomAxis />
+                <RightAxis />
               </Layer>
             </InteractiveStage>
           </YTransformerContext.Provider>

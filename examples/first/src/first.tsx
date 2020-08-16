@@ -10,8 +10,8 @@ import {
   useXTransformer,
   useYTransformer,
   Grid,
-  XAxis,
-  YAxis,
+  BottomAxis,
+  RightAxis,
   YTransformerContext,
   XTransformerContext,
 } from 'core';
@@ -93,8 +93,8 @@ const FirstChartComponent: FunctionComponent<FirstProps> = (props) => {
               <Line/>
             </Layer>
             <Layer>
-              <XAxis/>
-              <YAxis/>
+              <BottomAxis/>
+              <RightAxis/>
             </Layer>
           </InteractiveStage>
         </YTransformerContext.Provider>

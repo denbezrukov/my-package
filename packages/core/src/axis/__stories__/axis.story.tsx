@@ -3,13 +3,11 @@ import { scaleLinear } from 'd3-scale';
 import { storiesOf } from '@storybook/react';
 import { Layer, Stage, Rect, Text } from 'react-konva';
 import { number, withKnobs } from '@storybook/addon-knobs';
-import { XAxis } from '../xAxis/xAxis';
 import {
   XTransformerContext,
   YTransformerContext,
 } from '../../transform/transformerContext';
 import { useTransformerState } from '../../transform/_hooks/useTransformerState';
-import { YAxis } from '../yAxis/yAxis';
 import {
   DragInteraction,
   useDragInteraction,
@@ -18,10 +16,20 @@ import { useYTransformer } from '../../transform/_hooks/useYTransformer';
 import { useXTransformer } from '../../transform/_hooks/useXTransformer';
 import { DimensionContext } from '../../dimension/dimensionContext';
 import { useDimension } from '../../dimension/useDimension';
+import { BottomAxis } from '../botomAxis/bottomAxis';
+import { RightAxis } from '../rightAxis/rightAxis';
+import { LeftAxis } from '../leftAxis/leftAxis';
+import { TopAxis } from '../topAxis/topAxis';
+
+const containerStyles = {
+  borderColor: 'black',
+  borderWidth: 1,
+  borderStyle: 'solid',
+};
 
 storiesOf('Axis', module)
   .addDecorator(withKnobs)
-  .add('XAxis', () => {
+  .add('Horizontal', () => {
     const width = number('width', 400);
     const height = number('height', 400);
     const size = number('size', 20);
@@ -46,16 +54,16 @@ storiesOf('Axis', module)
     }, [width, height, size]);
 
     return (
-      <Stage width={width} height={height}>
+      <Stage style={containerStyles} width={width} height={height}>
         <DimensionContext.Provider value={dimension}>
           <XTransformerContext.Provider value={transformer}>
-            <XInteractionStage />
+            <XInteractionStage/>
           </XTransformerContext.Provider>
         </DimensionContext.Provider>
       </Stage>
     );
   })
-  .add('YAxis', () => {
+  .add('Vertical', () => {
     const width = number('width', 400);
     const height = number('height', 400);
     const size = number('size', 50);
@@ -79,10 +87,10 @@ storiesOf('Axis', module)
     }, [width, height, size]);
 
     return (
-      <Stage width={width} height={height}>
+      <Stage style={containerStyles} width={width} height={height}>
         <DimensionContext.Provider value={dimension}>
           <YTransformerContext.Provider value={transformer}>
-            <YInteractionStage />
+            <YInteractionStage/>
           </YTransformerContext.Provider>
         </DimensionContext.Provider>
       </Stage>
@@ -119,9 +127,10 @@ export const YInteractionStage: FunctionComponent = () => {
         width={width}
         height={height - size}
       />
-      <Text x={width / 2} y={(height - size) / 2} text="Drag for shift" />
+      <Text x={width / 2} y={(height - size) / 2} text="Drag for shift"/>
 
-      <YAxis />
+      <RightAxis/>
+      <LeftAxis/>
     </Layer>
   );
 };
@@ -156,9 +165,10 @@ export const XInteractionStage: FunctionComponent = () => {
         width={width}
         height={height - size}
       />
-      <Text x={width / 2} y={(height - size) / 2} text="Drag for shift" />
+      <Text x={width / 2} y={(height - size) / 2} text="Drag for shift"/>
 
-      <XAxis />
+      <TopAxis/>
+      <BottomAxis/>
     </Layer>
   );
 };

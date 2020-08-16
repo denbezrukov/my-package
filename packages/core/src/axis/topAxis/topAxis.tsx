@@ -1,18 +1,18 @@
 import React, { FunctionComponent, memo, useCallback } from 'react';
 import { Rect, Group, Line } from 'react-konva';
-import { XTick } from './xTick';
+import Konva from 'konva';
+import { TopTick } from './topTick';
 import {
   DragInteraction,
   useDragInteraction,
 } from '../../transform/_hooks/useDragInteraction';
 import { useXTransformer } from '../../transform/_hooks/useXTransformer';
 import { useDimension } from '../../dimension/useDimension';
-import Konva from 'konva';
 
-const XAxisComponent: FunctionComponent = () => {
-  const { width, height, xAxisSize } = useDimension();
+const TopAxisComponent: FunctionComponent = () => {
+  const { width, xAxisSize } = useDimension();
 
-  const y = height - xAxisSize + 0.5;
+  const y = xAxisSize + 0.5;
 
   const { transform, setScale, setOffset } = useXTransformer();
 
@@ -41,17 +41,17 @@ const XAxisComponent: FunctionComponent = () => {
 
   return (
     <Group onDblClick={onDblClick} onMouseDown={onMouseDown}>
-      <Rect x={0} y={y} height={xAxisSize} width={width} fill="white" />
+      <Rect x={0} y={0} height={xAxisSize} width={width} fill="white" />
       <Line points={[0, y, width, y]} stroke="black" strokeWidth={1} />
       {transform.ticks().map((tick, index) => {
         const x = transform(tick);
         const text = format(tick);
         const key = `${x}:${y}:${index}`;
 
-        return <XTick key={key} x={x} y={y} text={text} />;
+        return <TopTick key={key} x={x} y={y} text={text} />;
       })}
     </Group>
   );
 };
 
-export const XAxis = memo(XAxisComponent);
+export const TopAxis = memo(TopAxisComponent);
