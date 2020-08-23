@@ -32,7 +32,7 @@ storiesOf('Axis', module)
   .add('Horizontal', () => {
     const width = number('width', 400);
     const height = number('height', 400);
-    const size = number('size', 20);
+    const size = number('size', 40);
     const from = number('from', 0);
     const to = number('to', 400);
 
@@ -57,7 +57,7 @@ storiesOf('Axis', module)
       <Stage style={containerStyles} width={width} height={height}>
         <DimensionContext.Provider value={dimension}>
           <XTransformerContext.Provider value={transformer}>
-            <XInteractionStage/>
+            <XInteractionStage />
           </XTransformerContext.Provider>
         </DimensionContext.Provider>
       </Stage>
@@ -90,7 +90,7 @@ storiesOf('Axis', module)
       <Stage style={containerStyles} width={width} height={height}>
         <DimensionContext.Provider value={dimension}>
           <YTransformerContext.Provider value={transformer}>
-            <YInteractionStage/>
+            <YInteractionStage />
           </YTransformerContext.Provider>
         </DimensionContext.Provider>
       </Stage>
@@ -127,10 +127,10 @@ export const YInteractionStage: FunctionComponent = () => {
         width={width}
         height={height - size}
       />
-      <Text x={width / 2} y={(height - size) / 2} text="Drag for shift"/>
+      <Text x={width / 2} y={(height - size) / 2} text="Drag for shift" />
 
-      <RightAxis/>
-      <LeftAxis/>
+      <RightAxis />
+      <LeftAxis />
     </Layer>
   );
 };
@@ -165,10 +165,10 @@ export const XInteractionStage: FunctionComponent = () => {
         width={width}
         height={height - size}
       />
-      <Text x={width / 2} y={(height - size) / 2} text="Drag for shift"/>
+      <Text x={width / 2} y={(height - size) / 2} text="Drag for shift" />
 
-      <TopAxis/>
-      <BottomAxis/>
+      <TopAxis />
+      <BottomAxis />
     </Layer>
   );
 };

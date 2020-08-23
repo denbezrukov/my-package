@@ -33,11 +33,14 @@ const BottomAxisComponent: FunctionComponent = () => {
   );
 
   const dragInteraction = useDragInteraction(onMove);
-  const onMouseDown = useCallback((event: Konva.KonvaEventObject<MouseEvent>) => {
-    const {offsetX} = event.evt;
-    setScaleOffset(() => offsetX);
-    dragInteraction(event);
-  }, [dragInteraction])
+  const onMouseDown = useCallback(
+    (event: Konva.KonvaEventObject<MouseEvent>) => {
+      const { offsetX } = event.evt;
+      setScaleOffset(() => offsetX);
+      dragInteraction(event);
+    },
+    [dragInteraction, setScaleOffset],
+  );
 
   return (
     <Group onDblClick={onDblClick} onMouseDown={onMouseDown}>

@@ -1,4 +1,4 @@
-import React, { FunctionComponent, memo} from 'react';
+import React, { FunctionComponent, memo } from 'react';
 import { Line, Text } from 'react-konva';
 import { TickProps } from '../tick.inteface';
 import { textSize } from '../../utils/textSize';

@@ -3,7 +3,7 @@ import Konva from 'konva';
 const virtualText = new Konva.Text();
 const dictionary: Record<string, { width: number; height: number }> = {};
 
-export const textSize = (text: string /*, fontSize = 12*/) => {
+export const textSize = (text: string /* , fontSize = 12 */) => {
   let width = 0;
   let height = 0;
 

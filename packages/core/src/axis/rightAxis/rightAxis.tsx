@@ -1,5 +1,6 @@
 import React, { FunctionComponent, memo, useCallback } from 'react';
 import { Rect, Group, Line } from 'react-konva';
+import Konva from 'konva';
 import { RightTick } from './rightTick';
 import {
   DragInteraction,
@@ -7,7 +8,6 @@ import {
 } from '../../transform/_hooks/useDragInteraction';
 import { useYTransformer } from '../../transform/_hooks/useYTransformer';
 import { useDimension } from '../../dimension/useDimension';
-import Konva from 'konva';
 
 const RightAxisComponent: FunctionComponent = () => {
   const { width, height, yAxisSize } = useDimension();
@@ -32,11 +32,14 @@ const RightAxisComponent: FunctionComponent = () => {
   );
 
   const dragInteraction = useDragInteraction(onMove);
-  const onMouseDown = useCallback((event: Konva.KonvaEventObject<MouseEvent>) => {
-    const {offsetY} = event.evt;
-    setScaleOffset(() => offsetY);
-    dragInteraction(event);
-  }, [dragInteraction])
+  const onMouseDown = useCallback(
+    (event: Konva.KonvaEventObject<MouseEvent>) => {
+      const { offsetY } = event.evt;
+      setScaleOffset(() => offsetY);
+      dragInteraction(event);
+    },
+    [dragInteraction, setScaleOffset],
+  );
 
   return (
     <Group onDblClick={onDblClick} onMouseDown={onMouseDown}>

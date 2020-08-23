@@ -2,14 +2,17 @@ import React, { useMemo } from 'react';
 import { storiesOf } from '@storybook/react';
 import { Layer } from 'react-konva';
 import { number, withKnobs } from '@storybook/addon-knobs';
+import { scaleLinear } from 'd3-scale';
 import { InteractiveStage } from '../interactiveStage';
-import {BottomAxis} from '../../axis/botomAxis/bottomAxis';
-import {RightAxis} from '../../axis/rightAxis/rightAxis';
+import { BottomAxis } from '../../axis/botomAxis/bottomAxis';
+import { RightAxis } from '../../axis/rightAxis/rightAxis';
 import { Grid } from '../../grid/grid';
 import { DimensionContext } from '../../dimension/dimensionContext';
-import { scaleLinear } from 'd3-scale';
 import { useTransformerState } from '../../transform/_hooks/useTransformerState';
-import { XTransformerContext, YTransformerContext } from '../../transform/transformerContext';
+import {
+  XTransformerContext,
+  YTransformerContext,
+} from '../../transform/transformerContext';
 
 storiesOf('Interactive Stage', module)
   .addDecorator(withKnobs)
@@ -64,12 +67,9 @@ storiesOf('Interactive Stage', module)
       <DimensionContext.Provider value={dimension}>
         <XTransformerContext.Provider value={xTransformer}>
           <YTransformerContext.Provider value={yTransformer}>
-            <InteractiveStage
-              xDomain={xDomain}
-              yDomain={yDomain}
-            >
+            <InteractiveStage xDomain={xDomain} yDomain={yDomain}>
               <Layer>
-                <Grid/>
+                <Grid />
               </Layer>
               <Layer>
                 <BottomAxis />

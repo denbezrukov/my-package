@@ -15,8 +15,8 @@ import {
   YTransformerContext,
   XTransformerContext,
 } from 'core';
-import { FirstProps } from './first.interface';
 import { scaleLinear, scaleTime } from 'd3-scale';
+import { FirstProps } from './first.interface';
 
 const Line: FunctionComponent = () => {
   const { transform: xTransform } = useXTransformer();
@@ -25,15 +25,15 @@ const Line: FunctionComponent = () => {
   const data = line()
     .x((d) => xTransform(d[0]))
     .y((d) => yTransform(d[1]))(
-      weatherList.map((weather) => {
-        const x = new Date(weather.date);
+    weatherList.map((weather) => {
+      const x = new Date(weather.date);
 
-        return [x.getTime(), weather.temperatureMax];
-      }),
-    );
+      return [x.getTime(), weather.temperatureMax];
+    }),
+  );
 
   return data !== null ? (
-    <Path data={data} fill="transparent" strokeWidth={2} stroke="#af9358"/>
+    <Path data={data} fill="transparent" strokeWidth={2} stroke="#af9358" />
   ) : null;
 };
 
@@ -89,12 +89,12 @@ const FirstChartComponent: FunctionComponent<FirstProps> = (props) => {
         <YTransformerContext.Provider value={yTransformer}>
           <InteractiveStage>
             <Layer>
-              <Grid/>
-              <Line/>
+              <Grid />
+              <Line />
             </Layer>
             <Layer>
-              <BottomAxis/>
-              <RightAxis/>
+              <BottomAxis />
+              <RightAxis />
             </Layer>
           </InteractiveStage>
         </YTransformerContext.Provider>
