@@ -34,7 +34,7 @@ storiesOf('Axis', module)
     const height = number('height', 400);
     const size = number('size', 20);
     const from = number('from', 0);
-    const to = number('to', 100);
+    const to = number('to', 400);
 
     const config = useMemo(() => {
       return {

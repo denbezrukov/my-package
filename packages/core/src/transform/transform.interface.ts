@@ -19,7 +19,7 @@ export interface Transformer<Domain> {
   transform: Scale<Domain>;
   setShift: (setShift: (shift: number) => number) => void;
   setScale: (setScale: (scale: number) => number) => void;
-  setOffset: (setOffset: (offset: Domain) => Domain) => void;
+  setScaleOffset: (setScaleOffset: (scaleOffset: number) => number) => void;
 }
 
 export interface Point {

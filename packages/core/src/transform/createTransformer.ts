@@ -13,7 +13,7 @@ export const createTransformer = <Domain>(
 
   let shift = 0;
   let scaleRange = 0;
-  let offsetPoint = domain[0];
+  let scaleOffset = domain[0];
 
   const transform = scale.interpolate(interpolateCanvasRound);
 
@@ -21,7 +21,7 @@ export const createTransformer = <Domain>(
     const [from, to] = range;
 
     const k = 1 + scaleRange / (to - from);
-    const offset = transform.range(range)(offsetPoint);
+    const offset = transform.range(range)(scaleOffset);
 
     transform.range([
       from * k + offset * (1 - k) + shift,
@@ -39,8 +39,11 @@ export const createTransformer = <Domain>(
     updateTransform();
   };
 
-  const setOffset: Transformer<Domain>['setOffset'] = (action) => {
-    offsetPoint = action(offsetPoint);
+  const setScaleOffset: Transformer<Domain>['setScaleOffset'] = (action) => {
+    const prevValue = transform(scaleOffset);
+    const nextValue = action(prevValue);
+    scaleOffset = transform.invert(nextValue);
+    updateTransform();
   };
 
   updateTransform();
@@ -49,6 +52,6 @@ export const createTransformer = <Domain>(
     transform,
     setShift,
     setScale,
-    setOffset,
+    setScaleOffset,
   };
 };

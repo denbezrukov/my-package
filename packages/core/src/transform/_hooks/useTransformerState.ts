@@ -33,15 +33,15 @@ export const useTransformerState = <Domain>(
       });
     };
 
-    const setOffset: Transformer<Domain>['setOffset'] = (action) => {
-      transformer.setOffset(action);
+    const setScaleOffset: Transformer<Domain>['setScaleOffset'] = (action) => {
+      transformer.setScaleOffset(action);
     };
 
     return {
       transform: transformer.transform,
       setShift,
       setScale,
-      setOffset,
+      setScaleOffset,
     };
   }, [transformer, setTransformer]);
 };

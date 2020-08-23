@@ -14,7 +14,7 @@ const TopAxisComponent: FunctionComponent = () => {
 
   const y = xAxisSize + 0.5;
 
-  const { transform, setScale, setOffset } = useXTransformer();
+  const { transform, setScale, setScaleOffset } = useXTransformer();
 
   const format = transform.tickFormat();
 
@@ -34,8 +34,8 @@ const TopAxisComponent: FunctionComponent = () => {
 
   const dragInteraction = useDragInteraction(onMove);
   const onMouseDown = useCallback((event: Konva.KonvaEventObject<MouseEvent>) => {
-    const {clientX} = event.evt;
-    setOffset(() => transform.invert(clientX));
+    const {offsetX} = event.evt;
+    setScaleOffset(() => offsetX);
     dragInteraction(event);
   }, [dragInteraction])
 

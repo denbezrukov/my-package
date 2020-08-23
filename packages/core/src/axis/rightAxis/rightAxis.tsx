@@ -13,7 +13,7 @@ const RightAxisComponent: FunctionComponent = () => {
   const { width, height, yAxisSize } = useDimension();
   const x = width - yAxisSize + 0.5;
 
-  const { transform, setScale, setOffset } = useYTransformer();
+  const { transform, setScale, setScaleOffset } = useYTransformer();
 
   const format = transform.tickFormat();
 
@@ -33,8 +33,8 @@ const RightAxisComponent: FunctionComponent = () => {
 
   const dragInteraction = useDragInteraction(onMove);
   const onMouseDown = useCallback((event: Konva.KonvaEventObject<MouseEvent>) => {
-    const {clientY} = event.evt;
-    setOffset(() => transform.invert(clientY));
+    const {offsetY} = event.evt;
+    setScaleOffset(() => offsetY);
     dragInteraction(event);
   }, [dragInteraction])
 
