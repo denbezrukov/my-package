@@ -7,7 +7,10 @@ export const textSize = (text: string /* , fontSize = 12 */) => {
   let width = 0;
   let height = 0;
 
-  for (const char of text) {
+  // eslint-disable-next-line no-plusplus
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+
     if (!dictionary[char]) {
       virtualText.text(char);
       // virtualText.fontSize(fontSize);
