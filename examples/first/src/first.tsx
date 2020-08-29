@@ -67,7 +67,8 @@ const FirstChartComponent: FunctionComponent<FirstProps> = (props) => {
     return {
       scale: scaleTime()
         .domain(xDomain)
-        .range([0, (width ?? 0) - yAxisSize]),
+        .range([0, (width ?? 0) - yAxisSize])
+        .nice(),
     };
   }, [xDomain, width, yAxisSize]);
 
@@ -77,9 +78,10 @@ const FirstChartComponent: FunctionComponent<FirstProps> = (props) => {
     return {
       scale: scaleLinear()
         .domain(yDomain)
-        .range([(height ?? 0) + xAxisSize, 0]),
+        .range([height ?? 0, 0])
+        .nice(),
     };
-  }, [yDomain, height, xAxisSize]);
+  }, [yDomain, height]);
 
   const yTransformer = useTransformerState(yTransformerConfig);
 

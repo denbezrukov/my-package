@@ -5,7 +5,7 @@ import { useYTransformer } from '../transform/_hooks/useYTransformer';
 import { useDimension } from '../dimension/useDimension';
 
 const GridComponent: FunctionComponent = () => {
-  const { width, height, xAxisSize, yAxisSize } = useDimension();
+  const { width, height } = useDimension();
   const { transform: xTransform } = useXTransformer();
   const { transform: yTransform } = useYTransformer();
 
@@ -17,7 +17,7 @@ const GridComponent: FunctionComponent = () => {
         return (
           <Line
             key={index}
-            points={[x, 0, x, height - xAxisSize]}
+            points={[x, 0, x, height]}
             stroke="black"
             strokeWidth={1}
           />
@@ -29,7 +29,7 @@ const GridComponent: FunctionComponent = () => {
         return (
           <Line
             key={index}
-            points={[0, y, width - yAxisSize, y]}
+            points={[0, y, width, y]}
             stroke="black"
             strokeWidth={1}
           />

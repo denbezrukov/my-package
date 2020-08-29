@@ -1,7 +1,10 @@
 import Konva from 'konva';
 
 const virtualText = new Konva.Text();
-const dictionary: Record<string, { width: number; height: number }> = {};
+const dictionary: Record<
+  string,
+  { width: number; height: number } | undefined
+> = {};
 
 export const textSize = (text: string /* , fontSize = 12 */) => {
   let width = 0;
@@ -20,8 +23,12 @@ export const textSize = (text: string /* , fontSize = 12 */) => {
       };
     }
 
-    width += dictionary[char].width;
-    height = Math.max(dictionary[char].height, height);
+    const value = dictionary[char];
+
+    if (value) {
+      width += value.width;
+      height = Math.max(value.height, height);
+    }
   }
 
   return {
