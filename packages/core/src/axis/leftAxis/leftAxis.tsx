@@ -8,8 +8,10 @@ import {
 } from '../../transform/_hooks/useDragInteraction';
 import { useYTransformer } from '../../transform/_hooks/useYTransformer';
 import { useDimension } from '../../dimension/useDimension';
+import { AxisProps } from '../axis.interface';
 
-const LeftAxisComponent: FunctionComponent = () => {
+const LeftAxisComponent: FunctionComponent<AxisProps> = (props) => {
+  const { children } = props;
   const { height, yAxisSize } = useDimension();
   const x = yAxisSize + 0.5;
 
@@ -42,7 +44,7 @@ const LeftAxisComponent: FunctionComponent = () => {
   );
 
   return (
-    <Group onDblClick={onDblClick} onMouseDown={onMouseDown}>
+    <Group x={0} y={0} onDblClick={onDblClick} onMouseDown={onMouseDown}>
       <Rect x={0} y={0} height={height} width={yAxisSize} fill="white" />
       <Line points={[x, 0, x, height]} stroke="black" strokeWidth={1} />
       {transform.ticks().map((tick, index) => {
@@ -52,6 +54,7 @@ const LeftAxisComponent: FunctionComponent = () => {
 
         return <LeftTick key={key} x={x} y={y} text={text} />;
       })}
+      {children}
     </Group>
   );
 };

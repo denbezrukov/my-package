@@ -8,8 +8,9 @@ import {
 } from '../../transform/_hooks/useDragInteraction';
 import { useXTransformer } from '../../transform/_hooks/useXTransformer';
 import { useDimension } from '../../dimension/useDimension';
+import { AxisProps } from '../axis.interface';
 
-const BottomAxisComponent: FunctionComponent = (props) => {
+const BottomAxisComponent: FunctionComponent<AxisProps> = (props) => {
   const { children } = props;
   const { width, height, xAxisSize } = useDimension();
 

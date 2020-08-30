@@ -8,8 +8,10 @@ import {
 } from '../../transform/_hooks/useDragInteraction';
 import { useYTransformer } from '../../transform/_hooks/useYTransformer';
 import { useDimension } from '../../dimension/useDimension';
+import { AxisProps } from '../axis.interface';
 
-const RightAxisComponent: FunctionComponent = () => {
+const RightAxisComponent: FunctionComponent<AxisProps> = (props) => {
+  const { children } = props;
   const { width, height, yAxisSize } = useDimension();
   const x = width - yAxisSize + 0.5;
 
@@ -42,16 +44,17 @@ const RightAxisComponent: FunctionComponent = () => {
   );
 
   return (
-    <Group onDblClick={onDblClick} onMouseDown={onMouseDown}>
-      <Rect x={x} y={0} height={height} width={yAxisSize} fill="white" />
-      <Line points={[x, 0, x, height]} stroke="black" strokeWidth={1} />
+    <Group x={x} y={0} onDblClick={onDblClick} onMouseDown={onMouseDown}>
+      <Rect x={0} y={0} height={height} width={yAxisSize} fill="white" />
+      <Line points={[0, 0, 0, height]} stroke="black" strokeWidth={1} />
       {transform.ticks().map((tick, index) => {
         const y = transform(tick);
         const text = format(tick);
         const key = `${x}:${y}:${index}`;
 
-        return <RightTick key={key} x={x} y={y} text={text} />;
+        return <RightTick key={key} x={0} y={y} text={text} />;
       })}
+      {children}
     </Group>
   );
 };

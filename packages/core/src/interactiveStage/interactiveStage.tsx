@@ -17,7 +17,12 @@ import { useDimension } from '../dimension/useDimension';
 const InteractiveStageComponent: FunctionComponent<InteractiveStageProps> = (
   props,
 ) => {
-  const { children, ...restProps } = props;
+  const {
+    disableXInteraction,
+    disableYInteraction,
+    children,
+    ...restProps
+  } = props;
 
   const xTransformer = useXTransformer();
   const yTransformer = useYTransformer();
@@ -26,14 +31,20 @@ const InteractiveStageComponent: FunctionComponent<InteractiveStageProps> = (
   const onMove: DragInteraction = useCallback(
     (event, point) => {
       const { clientX, clientY } = event;
-      xTransformer.setShift((shift) => {
-        return shift + clientX - point.x;
-      });
-      yTransformer.setShift((shift) => {
-        return shift + clientY - point.y;
-      });
+
+      if (!disableXInteraction) {
+        xTransformer.setShift((shift) => {
+          return shift + clientX - point.x;
+        });
+      }
+
+      if (!disableYInteraction) {
+        yTransformer.setShift((shift) => {
+          return shift + clientY - point.y;
+        });
+      }
     },
-    [yTransformer, xTransformer],
+    [yTransformer, xTransformer, disableXInteraction, disableYInteraction],
   );
   const onMouseDown = useDragInteraction(onMove);
 

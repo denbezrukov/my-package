@@ -12,3 +12,5 @@ export {
   YTransformerContext,
 } from './transform/transformerContext';
 export { DimensionContext } from './dimension/dimensionContext';
+export { useDimension } from './dimension/useDimension';
+export { getTextSize } from './utils/textSize';

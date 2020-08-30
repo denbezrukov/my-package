@@ -6,7 +6,7 @@ const dictionary: Record<
   { width: number; height: number } | undefined
 > = {};
 
-export const textSize = (text: string /* , fontSize = 12 */) => {
+export const getTextSize = (text: string /* , fontSize = 12 */) => {
   let width = 0;
   let height = 0;
 

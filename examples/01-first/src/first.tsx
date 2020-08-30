@@ -1,5 +1,5 @@
 import React, { FunctionComponent, memo, useMemo } from 'react';
-import { weatherList } from 'data';
+import { weatherList } from 'data/src';
 import { Layer, Path } from 'react-konva';
 import { extent } from 'd3-array';
 import { line } from 'd3-shape';
@@ -14,7 +14,7 @@ import {
   RightAxis,
   YTransformerContext,
   XTransformerContext,
-} from 'core';
+} from 'core/src';
 import { scaleLinear, scaleTime } from 'd3-scale';
 import { FirstProps } from './first.interface';
 
@@ -67,7 +67,7 @@ const FirstChartComponent: FunctionComponent<FirstProps> = (props) => {
     return {
       scale: scaleTime()
         .domain(xDomain)
-        .range([0, (width ?? 0) - yAxisSize])
+        .range([15, (width ?? 0) - yAxisSize - 15])
         .nice(),
     };
   }, [xDomain, width, yAxisSize]);
@@ -78,10 +78,10 @@ const FirstChartComponent: FunctionComponent<FirstProps> = (props) => {
     return {
       scale: scaleLinear()
         .domain(yDomain)
-        .range([height ?? 0, 0])
+        .range([(height ?? 0) - xAxisSize, 15])
         .nice(),
     };
-  }, [yDomain, height]);
+  }, [yDomain, height, xAxisSize]);
 
   const yTransformer = useTransformerState(yTransformerConfig);
 

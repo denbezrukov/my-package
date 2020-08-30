@@ -1,64 +1,26 @@
-import React, {
-  FunctionComponent,
-  memo,
-  useMemo,
-  useContext,
-  createContext,
-} from 'react';
-import { weatherList } from 'data';
-import { Layer, Circle } from 'react-konva';
+import React, { FunctionComponent, memo, useMemo } from 'react';
+import { weatherList } from 'data/src';
+import { Layer } from 'react-konva';
 import { extent } from 'd3-array';
 import {
   DimensionContext,
   InteractiveStage,
   useTransformerState,
-  useXTransformer,
-  useYTransformer,
   Grid,
-  BottomAxis,
-  LeftAxis,
   YTransformerContext,
   XTransformerContext,
-} from 'core';
-import { ScaleLinear, scaleLinear } from 'd3-scale';
-import { SecondProps } from './second.interface';
+} from 'core/src';
+import { scaleLinear } from 'd3-scale';
+import { SecondProps } from './scatterPlot.interface';
+import { ColorScaleContext } from './scatterPlot.constant';
+import { Dots } from './_components/dots';
+import { XAxis } from './_components/xAxis';
+import { YAxis } from './_components/yAxis';
 
-const ColorScaleContext = createContext<
-  ScaleLinear<string, string> | undefined
->(undefined);
-
-const useColorScale = () => {
-  const scale = useContext(ColorScaleContext);
-
-  if (scale) {
-    return scale;
-  }
-
-  throw new Error('Color scale is undefined');
-};
-
-const Dots: FunctionComponent = () => {
-  const { transform: xTransform } = useXTransformer();
-  const { transform: yTransform } = useYTransformer();
-  const colorScale = useColorScale();
-
-  return (
-    <>
-      {weatherList.map((weather, index) => {
-        const x = xTransform(weather.dewPoint);
-        const y = yTransform(weather.humidity);
-        const fill = colorScale(weather.cloudCover);
-
-        return <Circle key={index} radius={4} x={x} y={y} fill={fill} />;
-      })}
-    </>
-  );
-};
-
-const SecondChartComponent: FunctionComponent<SecondProps> = (props) => {
+const ScatterPlotComponent: FunctionComponent<SecondProps> = (props) => {
   const { width, height } = props;
-  const yAxisSize = 50;
-  const xAxisSize = 30;
+  const yAxisSize = 55;
+  const xAxisSize = 40;
 
   const xDomain = useMemo<[number, number]>(() => {
     const [min, max] = extent(weatherList, (weather) => weather.dewPoint);
@@ -87,7 +49,7 @@ const SecondChartComponent: FunctionComponent<SecondProps> = (props) => {
     return {
       scale: scaleLinear()
         .domain(xDomain)
-        .range([yAxisSize, width ?? 0])
+        .range([yAxisSize + 15, (width ?? 0) - 15])
         .nice(),
     };
   }, [xDomain, width, yAxisSize]);
@@ -98,7 +60,7 @@ const SecondChartComponent: FunctionComponent<SecondProps> = (props) => {
     return {
       scale: scaleLinear()
         .domain(yDomain)
-        .range([(height ?? 0) + xAxisSize, 0])
+        .range([(height ?? 0) - xAxisSize, 15])
         .nice(),
     };
   }, [yDomain, height, xAxisSize]);
@@ -119,11 +81,11 @@ const SecondChartComponent: FunctionComponent<SecondProps> = (props) => {
             <ColorScaleContext.Provider value={colorScale}>
               <Layer>
                 <Grid />
-                <Dots />
+                <Dots weatherList={weatherList} />
               </Layer>
               <Layer>
-                <BottomAxis />
-                <LeftAxis />
+                <XAxis />
+                <YAxis />
               </Layer>
             </ColorScaleContext.Provider>
           </InteractiveStage>
@@ -133,4 +95,4 @@ const SecondChartComponent: FunctionComponent<SecondProps> = (props) => {
   );
 };
 
-export const SecondChart = memo(SecondChartComponent);
+export const ScatterPlot = memo(ScatterPlotComponent);

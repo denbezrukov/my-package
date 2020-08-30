@@ -1,11 +1,11 @@
 import React, { FunctionComponent, memo } from 'react';
 import { Line, Text } from 'react-konva';
 import { TickProps } from '../tick.inteface';
-import { textSize } from '../../utils/textSize';
+import { getTextSize } from '../../utils/textSize';
 
 export const TopTickComponent: FunctionComponent<TickProps> = (props) => {
   const { x, y, size = 5, text } = props;
-  const { width, height } = textSize(text);
+  const { width, height } = getTextSize(text);
 
   return (
     <>
