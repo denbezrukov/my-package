@@ -1,7 +1,19 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
-import { number, withKnobs } from '@storybook/addon-knobs';
+import { number, select, withKnobs } from '@storybook/addon-knobs';
+import { Weather } from 'data/src';
 import { BarChart } from '../barChart';
+
+type Keys =
+  | 'moonPhase'
+  | 'windSpeed'
+  | 'dewPoint'
+  | 'humidity'
+  | 'uvIndex'
+  | 'windBearing'
+  | 'temperatureMin'
+  | 'temperatureMax';
+type Options = Record<string, keyof Pick<Weather, Keys>>;
 
 storiesOf('Bar Chart', module)
   .addDecorator(withKnobs)
@@ -9,5 +21,24 @@ storiesOf('Bar Chart', module)
     const width = number('width', 800);
     const height = number('height', 400);
 
-    return <BarChart width={width} height={height} />;
+    const label = 'Field';
+    const options: Options = {
+      moonPhase: 'moonPhase',
+      windSpeed: 'windSpeed',
+      dewPoint: 'dewPoint',
+      humidity: 'humidity',
+      uvIndex: 'uvIndex',
+      windBearing: 'windBearing',
+      temperatureMin: 'temperatureMin',
+      temperatureMax: 'temperatureMax',
+    };
+    const defaultValue = 'moonPhase';
+
+    const field = select(label, options, defaultValue);
+
+    const metricAccessor = (weather: Weather) => weather[field];
+
+    return (
+      <BarChart width={width} height={height} metricAccessor={metricAccessor} />
+    );
   });
