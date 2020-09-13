@@ -39,6 +39,11 @@ storiesOf('Bar Chart', module)
     const metricAccessor = (weather: Weather) => weather[field];
 
     return (
-      <BarChart width={width} height={height} metricAccessor={metricAccessor} />
+      <BarChart
+        key={Math.random()}
+        width={width}
+        height={height}
+        metricAccessor={metricAccessor}
+      />
     );
   });
