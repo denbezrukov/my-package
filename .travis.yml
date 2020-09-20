@@ -11,6 +11,8 @@ script:
 cache:
   directories:
     - "node_modules"
+before_deploy:
+  - yarn site
 deploy:
   - provider: pages
     local_dir: site

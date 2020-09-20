@@ -14,6 +14,7 @@
     "clean": "rimraf lib es dist",
     "build:cjs": "tsc --outDir lib",
     "build:es": "tsc --outDir es -m es2015",
+    "site": "yarn storybook:build",
     "storybook:dev": "start-storybook -p 6006",
     "storybook:build": "build-storybook --output-dir site/storybook --quiet"
   },
