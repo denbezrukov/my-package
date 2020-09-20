@@ -7,7 +7,7 @@ before_install:
 script:
   - yarn lint
   - yarn compile
-  - yarn test
+#   - yarn test
 cache:
   directories:
     - "node_modules"
