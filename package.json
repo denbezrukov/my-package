@@ -14,8 +14,8 @@
     "clean": "rimraf lib es dist",
     "build:cjs": "tsc --outDir lib",
     "build:es": "tsc --outDir es -m es2015",
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "storybook:dev": "start-storybook -p 6006",
+    "storybook:build": "build-storybook --output-dir site/storybook --quiet"
   },
   "husky": {
     "hooks": {
