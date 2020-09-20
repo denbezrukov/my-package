@@ -15,6 +15,7 @@
     "build:cjs": "tsc --outDir lib",
     "build:es": "tsc --outDir es -m es2015",
     "site": "yarn storybook:build",
+    "nojekyll": "shx mkdir -p site && shx touch site/.nojekyll",
     "storybook:dev": "start-storybook -p 6006",
     "storybook:build": "build-storybook --output-dir site/storybook --quiet"
   },
@@ -57,6 +58,7 @@
     "lint-staged": "^10.2.11",
     "prettier": "^2.0.5",
     "rimraf": "^3.0.2",
+    "shx": "^0.3.2",
     "ts-jest": "^26.2.0",
     "ts-loader": "^8.0.2",
     "ts-node": "^8.10.2",
