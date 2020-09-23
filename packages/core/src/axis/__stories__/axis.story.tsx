@@ -27,76 +27,6 @@ const containerStyles = {
   borderStyle: 'solid',
 };
 
-storiesOf('Axis', module)
-  .addDecorator(withKnobs)
-  .add('Horizontal', () => {
-    const width = number('width', 400);
-    const height = number('height', 400);
-    const size = number('size', 40);
-    const from = number('from', 0);
-    const to = number('to', 400);
-
-    const config = useMemo(() => {
-      return {
-        scale: scaleLinear().domain([from, to]).range([0, width]),
-      };
-    }, [from, to, width]);
-
-    const transformer = useTransformerState(config);
-
-    const dimension = useMemo(() => {
-      return {
-        width,
-        height,
-        yAxisSize: 0,
-        xAxisSize: size,
-      };
-    }, [width, height, size]);
-
-    return (
-      <Stage style={containerStyles} width={width} height={height}>
-        <DimensionContext.Provider value={dimension}>
-          <XTransformerContext.Provider value={transformer}>
-            <XInteractionStage />
-          </XTransformerContext.Provider>
-        </DimensionContext.Provider>
-      </Stage>
-    );
-  })
-  .add('Vertical', () => {
-    const width = number('width', 400);
-    const height = number('height', 400);
-    const size = number('size', 50);
-    const from = number('from', 0);
-    const to = number('to', 100);
-
-    const config = useMemo(() => {
-      return {
-        scale: scaleLinear().domain([from, to]).range([height, 0]),
-      };
-    }, [from, to, height]);
-
-    const transformer = useTransformerState(config);
-    const dimension = useMemo(() => {
-      return {
-        width,
-        height,
-        yAxisSize: size,
-        xAxisSize: 0,
-      };
-    }, [width, height, size]);
-
-    return (
-      <Stage style={containerStyles} width={width} height={height}>
-        <DimensionContext.Provider value={dimension}>
-          <YTransformerContext.Provider value={transformer}>
-            <YInteractionStage />
-          </YTransformerContext.Provider>
-        </DimensionContext.Provider>
-      </Stage>
-    );
-  });
-
 export const YInteractionStage: FunctionComponent = () => {
   const { setShift } = useYTransformer();
 
@@ -172,3 +102,73 @@ export const XInteractionStage: FunctionComponent = () => {
     </Layer>
   );
 };
+
+storiesOf('Axis', module)
+  .addDecorator(withKnobs)
+  .add('Horizontal', () => {
+    const width = number('width', 400);
+    const height = number('height', 400);
+    const size = number('size', 40);
+    const from = number('from', 0);
+    const to = number('to', 400);
+
+    const config = useMemo(() => {
+      return {
+        scale: scaleLinear().domain([from, to]).range([0, width]),
+      };
+    }, [from, to, width]);
+
+    const transformer = useTransformerState(config);
+
+    const dimension = useMemo(() => {
+      return {
+        width,
+        height,
+        yAxisSize: 0,
+        xAxisSize: size,
+      };
+    }, [width, height, size]);
+
+    return (
+      <Stage style={containerStyles} width={width} height={height}>
+        <DimensionContext.Provider value={dimension}>
+          <XTransformerContext.Provider value={transformer}>
+            <XInteractionStage />
+          </XTransformerContext.Provider>
+        </DimensionContext.Provider>
+      </Stage>
+    );
+  })
+  .add('Vertical', () => {
+    const width = number('width', 400);
+    const height = number('height', 400);
+    const size = number('size', 50);
+    const from = number('from', 0);
+    const to = number('to', 100);
+
+    const config = useMemo(() => {
+      return {
+        scale: scaleLinear().domain([from, to]).range([height, 0]),
+      };
+    }, [from, to, height]);
+
+    const transformer = useTransformerState(config);
+    const dimension = useMemo(() => {
+      return {
+        width,
+        height,
+        yAxisSize: size,
+        xAxisSize: 0,
+      };
+    }, [width, height, size]);
+
+    return (
+      <Stage style={containerStyles} width={width} height={height}>
+        <DimensionContext.Provider value={dimension}>
+          <YTransformerContext.Provider value={transformer}>
+            <YInteractionStage />
+          </YTransformerContext.Provider>
+        </DimensionContext.Provider>
+      </Stage>
+    );
+  });
