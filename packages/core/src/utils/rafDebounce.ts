@@ -1,7 +1,11 @@
 export function rafDebounce(notify: VoidFunction) {
-  let handle: number;
+  let handle: number | undefined;
 
-  const cancel = () => window.cancelAnimationFrame(handle);
+  const cancel = () => {
+    if (handle) {
+      window.cancelAnimationFrame(handle);
+    }
+  };
 
   return Object.assign(
     () => {
