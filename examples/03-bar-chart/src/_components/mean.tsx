@@ -1,7 +1,7 @@
-import React, { FunctionComponent, memo, useMemo, useCallback } from 'react';
+import React, { FunctionComponent, memo, useCallback, useMemo } from 'react';
 import { getTextSize, useDimension, useXTransformer } from 'core/src';
 import { Line, Text } from 'react-konva';
-import { animated, Spring, config } from 'react-spring/renderprops-konva';
+import { animated, config, Transition } from 'react-spring/renderprops-konva';
 
 interface MeanProps {
   value: number;
@@ -10,26 +10,73 @@ interface MeanProps {
 const MeanComponent: FunctionComponent<MeanProps> = (props) => {
   const { value } = props;
   const { height, xAxisSize } = useDimension();
-  const { transform } = useXTransformer();
+  const xTransform = useXTransformer();
 
-  const x = transform(value);
-  const textSize = getTextSize('mean');
+  const { width: textWidth } = getTextSize('mean');
 
-  const from = useMemo(() => {
-    return { y: height - xAxisSize };
-  }, [height, xAxisSize]);
+  const items = useMemo(() => {
+    return [
+      {
+        x: xTransform.transform(value),
+        y: 0,
+        index: 0,
+      },
+    ];
+  }, [xTransform, value]);
 
-  const to = useMemo(() => {
+  const keys = useCallback((item: { index: number }) => {
+    return item.index;
+  }, []);
+
+  const from = useCallback(
+    (item: { x: number }) => {
+      const { x } = item;
+
+      return {
+        x,
+        y: height - xAxisSize,
+      };
+    },
+    [height, xAxisSize],
+  );
+
+  const initial = useCallback(
+    (item: { x: number }) => {
+      const { x } = item;
+
+      return {
+        x,
+        y: height - xAxisSize,
+      };
+    },
+    [height, xAxisSize],
+  );
+
+  const enter = useCallback((item: { x: number }) => {
+    const { x } = item;
+
     return {
+      x,
+      y: 0,
+    };
+  }, []);
+
+  const update = useCallback((item: { x: number }) => {
+    const { x } = item;
+
+    return {
+      x,
       y: 0,
     };
   }, []);
 
   const render = useCallback(
-    (animation: { y: number }) => {
+    (item: { index: number }) => (style: { x: number; y: number }) => {
+      const { x, y } = style;
+
       return (
-        <animated.Group x={x} y={animation.y}>
-          <Text x={-textSize.width / 2} y={0} text="mean" fill="maroon" />
+        <animated.Group x={x} y={y} key={item.index}>
+          <Text x={-textWidth / 2} y={0} text="mean" fill="maroon" />
           <Line
             points={[0, 15, 0, height - xAxisSize]}
             stroke="maroon"
@@ -38,13 +85,21 @@ const MeanComponent: FunctionComponent<MeanProps> = (props) => {
         </animated.Group>
       );
     },
-    [textSize.width, x, height, xAxisSize],
+    [height, xAxisSize, textWidth],
   );
 
   return (
-    <Spring native config={config.slow} from={from} to={to}>
+    <Transition
+      items={items}
+      keys={keys}
+      config={config.default}
+      from={from}
+      initial={initial}
+      enter={enter}
+      update={update}
+    >
       {render}
-    </Spring>
+    </Transition>
   );
 };
 

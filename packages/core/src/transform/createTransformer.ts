@@ -1,4 +1,5 @@
 import { Transformer, TransformerConfig } from './transform.interface';
+import { rafDebounce } from '../utils/rafDebounce';
 
 const interpolateCanvasRound = (a: number, b: number) => (t: number) => {
   return Math.round(a * (1 - t) + b * t) + 0.5;
@@ -29,9 +30,9 @@ export const createTransformer = <Domain>(
     ];
   };
 
-  const updateTransform = () => {
+  const updateTransform = rafDebounce(() => {
     transform.range(getRange());
-  };
+  });
 
   const setShift: Transformer<Domain>['setShift'] = (action) => {
     shift = action(shift);

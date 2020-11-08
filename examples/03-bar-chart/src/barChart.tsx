@@ -1,7 +1,7 @@
 import React, { FunctionComponent, memo, useMemo } from 'react';
 import { weatherList, Weather } from 'data/src';
 import { Layer } from 'react-konva';
-import { extent, max, histogram, mean } from 'd3-array';
+import { extent, max, bin, mean } from 'd3-array';
 import {
   DimensionContext,
   InteractiveStage,
@@ -26,7 +26,7 @@ const BarChartComponent: FunctionComponent<BarChartProps> = (props) => {
   }, [metricAccessor]);
 
   const bins = useMemo(() => {
-    const binsGenerator = histogram<Weather, number>()
+    const binsGenerator = bin<Weather, number>()
       .domain(xDomain)
       .value(metricAccessor)
       .thresholds(12);
@@ -35,7 +35,7 @@ const BarChartComponent: FunctionComponent<BarChartProps> = (props) => {
   }, [xDomain, metricAccessor]);
 
   const yDomain = useMemo(() => {
-    const top = max(bins, (bin) => bin.length);
+    const top = max(bins, (value) => value.length);
     return [0, top ?? 0];
   }, [bins]);
 
