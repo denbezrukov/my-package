@@ -4,6 +4,7 @@ export function rafDebounce(notify: VoidFunction) {
   const cancel = () => {
     if (handle) {
       window.cancelAnimationFrame(handle);
+      handle = undefined;
     }
   };
 
