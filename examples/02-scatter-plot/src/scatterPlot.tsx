@@ -16,6 +16,7 @@ import { ColorScaleContext } from './scatterPlot.constant';
 import { Dots } from './_components/dots';
 import { XAxis } from './_components/xAxis';
 import { YAxis } from './_components/yAxis';
+import { Voronoi } from './_components/voronoi';
 
 const ScatterPlotComponent: FunctionComponent<SecondProps> = (props) => {
   const { width, height } = props;
@@ -82,6 +83,7 @@ const ScatterPlotComponent: FunctionComponent<SecondProps> = (props) => {
               <Layer>
                 <Grid />
                 <Dots weatherList={weatherList} />
+                <Voronoi weatherList={weatherList} />
               </Layer>
               <Layer>
                 <XAxis />

@@ -66,9 +66,11 @@
   },
   "dependencies": {
     "@types/d3-array": "^2.7.0",
+    "@types/d3-delaunay": "^5.3.0",
     "@types/d3-scale": "^3.2.1",
     "@types/d3-shape": "^2.0.0",
     "d3-array": "^2.5.0",
+    "d3-delaunay": "^5.3.0",
     "d3-scale": "^3.2.1",
     "d3-shape": "^2.0.0",
     "konva": "^7.1.6",

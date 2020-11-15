@@ -52,7 +52,7 @@ const BarChartComponent: FunctionComponent<HumidityTimelineProps> = (props) => {
     return {
       scale: scaleTime()
         .domain(xDomain)
-        .range([15, (width ?? 0) - yAxisSize - 15])
+        .range([yAxisSize + 15, width ?? 0])
         .nice(),
     };
   }, [xDomain, width, yAxisSize]);
@@ -64,7 +64,7 @@ const BarChartComponent: FunctionComponent<HumidityTimelineProps> = (props) => {
       scale: scaleLinear()
         .domain(yDomain)
         .range([(height ?? 0) - xAxisSize, 15])
-        .nice(),
+        .nice(5),
     };
   }, [yDomain, height, xAxisSize]);
 
@@ -77,8 +77,8 @@ const BarChartComponent: FunctionComponent<HumidityTimelineProps> = (props) => {
           <InteractiveStage>
             <Layer />
             <Layer>
-              <LeftAxis />
               <BottomAxis />
+              <LeftAxis />
             </Layer>
           </InteractiveStage>
         </YTransformerContext.Provider>
