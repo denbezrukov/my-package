@@ -1,5 +1,5 @@
 {
-  "name": "03-bar-chart",
+  "name": "04-humidity-timeline",
   "version": "1.0.0",
   "devDependencies": {
     "@storybook/addon-knobs": "^6.0.28",
