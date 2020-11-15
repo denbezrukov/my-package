@@ -1,7 +1,47 @@
-import { Delaunay } from 'd3-delaunay';
-import React, { memo, useMemo } from 'react';
+import { Delaunay, Voronoi as VoronoiType } from 'd3-delaunay';
+import React, { memo, useCallback, useMemo, useState } from 'react';
 import { useDimension, useXTransformer, useYTransformer } from 'core';
 import { Path } from 'react-konva';
+
+interface CellProps<P> {
+  data: string;
+  voronoi: VoronoiType<P>;
+  index: number;
+}
+
+const Cell = <
+  P extends {
+    dewPoint: number;
+    humidity: number;
+  }
+>(
+  props: CellProps<P>,
+) => {
+  const { data, index, voronoi } = props;
+  const [isHovered, setHovered] = useState(false);
+  const onMouseEnter = useCallback(() => {
+    setHovered(true);
+    voronoi.neighbors(index);
+  }, [setHovered, voronoi, index]);
+
+  const onMouseLeave = useCallback(() => {
+    setHovered(false);
+  }, [setHovered]);
+
+  const stroke = isHovered ? 'red' : 'salmon';
+  const strokeWidth = isHovered ? 2 : 1;
+  return (
+    <Path
+      key={data}
+      data={data}
+      fill="transparent"
+      strokeWidth={strokeWidth}
+      stroke={stroke}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+    />
+  );
+};
 
 interface VoronoiProps {
   weatherList: {
@@ -29,15 +69,7 @@ const VoronoiComponent: React.FunctionComponent<VoronoiProps> = (props) => {
     <>
       {weatherList.map((value, index) => {
         const data = voronoi.renderCell(index);
-        return (
-          <Path
-            key={data}
-            data={data}
-            fill="transparent"
-            strokeWidth={1}
-            stroke="salmon"
-          />
-        );
+        return <Cell key={data} data={data} voronoi={voronoi} index={index} />;
       })}
     </>
   );
