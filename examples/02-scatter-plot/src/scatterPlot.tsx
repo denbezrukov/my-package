@@ -6,7 +6,6 @@ import {
   DimensionContext,
   InteractiveStage,
   useTransformerState,
-  Grid,
   YTransformerContext,
   XTransformerContext,
 } from 'core/src';
@@ -81,9 +80,8 @@ const ScatterPlotComponent: FunctionComponent<SecondProps> = (props) => {
           <InteractiveStage>
             <ColorScaleContext.Provider value={colorScale}>
               <Layer>
-                <Grid />
-                <Dots weatherList={weatherList} />
                 <Voronoi weatherList={weatherList} />
+                <Dots weatherList={weatherList} />
               </Layer>
               <Layer>
                 <XAxis />
