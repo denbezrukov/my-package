@@ -1,7 +1,7 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { number, withKnobs } from '@storybook/addon-knobs';
-import { TicksChart } from '../ticks';
+import { TicksChart } from '../ticksChart';
 
 storiesOf('Ticks Chart', module)
   .addDecorator(withKnobs)

@@ -1,13 +1,11 @@
 import React, { FunctionComponent, memo, useMemo } from 'react';
-import { Tick, ticksList } from 'data/src';
-import { Layer, Rect, Line, Group } from 'react-konva';
+import { ticksList } from 'data/src';
+import { Layer } from 'react-konva';
 import { extent } from 'd3-array';
 import {
   DimensionContext,
   InteractiveStage,
   useTransformerState,
-  useXTransformer,
-  useYTransformer,
   Grid,
   BottomAxis,
   RightAxis,
@@ -15,64 +13,8 @@ import {
   XTransformerContext,
 } from 'core/src';
 import { scaleLinear } from 'd3-scale';
-import { TicksChartProps } from './ticks.interface';
-
-type DomainTick = Tick & {
-  x0: number;
-  x1: number;
-};
-
-interface TicksProps {
-  ticks: DomainTick[];
-}
-
-const Ticks: FunctionComponent<TicksProps> = (props) => {
-  const { ticks } = props;
-  const xTransformer = useXTransformer();
-  const yTransformer = useYTransformer();
-
-  return (
-    <>
-      {ticks
-        .filter((tick) => {
-          return tick.open !== undefined;
-        })
-        .map((tick, index) => {
-          const x0 = xTransformer.transform(tick.x0);
-          const x1 = xTransformer.transform(tick.x1);
-          const open = yTransformer.transform(tick.open);
-          const close = yTransformer.transform(tick.close);
-          const y0 = Math.min(open, close);
-          const height = Math.max(open, close) - y0;
-          const high = yTransformer.transform(tick.high);
-          const low = yTransformer.transform(tick.low);
-
-          const width = x1 - x0;
-          return (
-            <Group key={index}>
-              <Rect
-                x={x0}
-                y={y0}
-                width={width}
-                height={height}
-                fill="cornflowerblue"
-              />
-              <Line
-                stroke="green"
-                strokeWidth={1}
-                points={[x0 + width / 2, high, x0 + width / 2, y0]}
-              />
-              <Line
-                stroke="red"
-                strokeWidth={1}
-                points={[x0 + width / 2, y0 + height, x0 + width / 2, low]}
-              />
-            </Group>
-          );
-        })}
-    </>
-  );
-};
+import { DomainTick, TicksChartProps } from './ticksChart.interface';
+import { Tick } from './_components/tick';
 
 const TicksChartComponent: FunctionComponent<TicksChartProps> = (props) => {
   const { width, height, barWidth, barPadding, start, end } = props;
@@ -80,16 +22,21 @@ const TicksChartComponent: FunctionComponent<TicksChartProps> = (props) => {
   const xAxisSize = 30;
 
   const list = useMemo<DomainTick[]>(() => {
-    return ticksList.slice(start, end).map((tick, index) => {
-      const x0 = barPadding + index * (barWidth + barPadding);
-      const x1 = x0 + barWidth;
+    return ticksList
+      .slice(start, end)
+      .map((tick, index) => {
+        const x0 = barPadding + index * (barWidth + barPadding);
+        const x1 = x0 + barWidth;
 
-      return {
-        x0,
-        x1,
-        ...tick,
-      };
-    });
+        return {
+          x0,
+          x1,
+          ...tick,
+        };
+      })
+      .filter((tick) => {
+        return tick.open !== undefined;
+      });
   }, [barWidth, barPadding, start, end]);
 
   const xDomain = useMemo<[number, number]>(() => {
@@ -142,7 +89,9 @@ const TicksChartComponent: FunctionComponent<TicksChartProps> = (props) => {
           <InteractiveStage>
             <Layer>
               <Grid />
-              <Ticks ticks={list} />
+              {list.map((tick, index) => {
+                return <Tick key={index} tick={tick} />;
+              })}
             </Layer>
             <Layer>
               <BottomAxis />

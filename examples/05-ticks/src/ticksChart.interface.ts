@@ -6,3 +6,12 @@ export interface TicksChartProps {
   start: number;
   end: number;
 }
+
+export interface DomainTick {
+  x0: number;
+  x1: number;
+  low: number;
+  high: number;
+  close: number;
+  open: number;
+}
