@@ -3,5 +3,6 @@ export interface TicksChartProps {
   height: number;
   barWidth: number;
   barPadding: number;
-  amount: number;
+  start: number;
+  end: number;
 }

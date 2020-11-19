@@ -75,12 +75,12 @@ const Ticks: FunctionComponent<TicksProps> = (props) => {
 };
 
 const TicksChartComponent: FunctionComponent<TicksChartProps> = (props) => {
-  const { width, height, barWidth, barPadding, amount } = props;
+  const { width, height, barWidth, barPadding, start, end } = props;
   const yAxisSize = 75;
   const xAxisSize = 30;
 
   const list = useMemo<DomainTick[]>(() => {
-    return ticksList.slice(0, amount).map((tick, index) => {
+    return ticksList.slice(start, end).map((tick, index) => {
       const x0 = barPadding + index * (barWidth + barPadding);
       const x1 = x0 + barWidth;
 
@@ -90,7 +90,7 @@ const TicksChartComponent: FunctionComponent<TicksChartProps> = (props) => {
         ...tick,
       };
     });
-  }, [barWidth, barPadding, amount]);
+  }, [barWidth, barPadding, start, end]);
 
   const xDomain = useMemo<[number, number]>(() => {
     return [list[0].x0 ?? 0, list[list.length - 1].x1 ?? 0];

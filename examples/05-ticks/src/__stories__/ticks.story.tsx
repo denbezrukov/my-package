@@ -10,7 +10,8 @@ storiesOf('Ticks Chart', module)
     const height = number('height', 400);
     const barWidth = number('bar width', 5);
     const barPadding = number('bar padding', 1);
-    const amount = number('amount', 150);
+    const start = number('start', 0);
+    const end = number('end', 150);
 
     return (
       <TicksChart
@@ -18,7 +19,8 @@ storiesOf('Ticks Chart', module)
         height={height}
         barWidth={barWidth}
         barPadding={barPadding}
-        amount={amount}
+        start={start}
+        end={end}
       />
     );
   });
