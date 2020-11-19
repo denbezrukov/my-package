@@ -22,10 +22,6 @@ const TicksChartComponent: FunctionComponent<TicksChartProps> = (props) => {
   const xAxisSize = 30;
 
   const list = useMemo<DomainTick[]>(() => {
-    if (end < start) {
-      return [];
-    }
-
     return ticksList
       .slice(start, end)
       .map((tick, index) => {
@@ -44,7 +40,7 @@ const TicksChartComponent: FunctionComponent<TicksChartProps> = (props) => {
   }, [barWidth, barPadding, start, end]);
 
   const xDomain = useMemo<[number, number]>(() => {
-    return [list[0].x0 ?? 0, list[list.length - 1].x1 ?? 0];
+    return [list[0]?.x0 ?? 0, list[list.length - 1]?.x1 ?? 0];
   }, [list]);
 
   const yDomain = useMemo<[number, number]>(() => {
