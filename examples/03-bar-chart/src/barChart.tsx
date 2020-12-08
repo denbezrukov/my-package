@@ -1,5 +1,5 @@
 import React, { FunctionComponent, memo, useMemo } from 'react';
-import { weatherList, Weather } from 'data/src';
+import { weatherList, Weather } from 'data';
 import { Layer } from 'react-konva';
 import { extent, max, bin, mean } from 'd3-array';
 import {
@@ -9,7 +9,7 @@ import {
   BottomAxis,
   YTransformerContext,
   XTransformerContext,
-} from 'core/src';
+} from 'core';
 import { scaleLinear } from 'd3-scale';
 import { BarChartProps } from './barChart.interface';
 import { Mean } from './_components/mean';
@@ -39,40 +39,43 @@ const BarChartComponent: FunctionComponent<BarChartProps> = (props) => {
     return [0, top ?? 0];
   }, [bins]);
 
-  const dimension = useMemo(() => {
-    return {
+  const dimension = useMemo(
+    () => ({
       width,
       height,
       yAxisSize,
       xAxisSize,
-    };
-  }, [width, height, xAxisSize, yAxisSize]);
+    }),
+    [width, height, xAxisSize, yAxisSize],
+  );
 
-  const xTransformerConfig = useMemo(() => {
-    return {
+  const xTransformerConfig = useMemo(
+    () => ({
       scale: scaleLinear()
         .domain(xDomain)
         .range([15, (width ?? 0) - yAxisSize - 15])
         .nice(),
-    };
-  }, [xDomain, width, yAxisSize]);
+    }),
+    [xDomain, width, yAxisSize],
+  );
 
   const xTransformer = useTransformerState(xTransformerConfig);
 
-  const yTransformerConfig = useMemo(() => {
-    return {
+  const yTransformerConfig = useMemo(
+    () => ({
       scale: scaleLinear()
         .domain(yDomain)
         .range([(height ?? 0) - xAxisSize, 15])
         .nice(),
-    };
-  }, [yDomain, height, xAxisSize]);
+    }),
+    [yDomain, height, xAxisSize],
+  );
 
   const yTransformer = useTransformerState(yTransformerConfig);
 
-  const meanValue = useMemo(() => {
-    return mean(weatherList, metricAccessor) ?? 0;
-  }, [metricAccessor]);
+  const meanValue = useMemo(() => mean(weatherList, metricAccessor) ?? 0, [
+    metricAccessor,
+  ]);
 
   return (
     <DimensionContext.Provider value={dimension}>

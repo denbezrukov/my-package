@@ -1,5 +1,5 @@
 import React, { FunctionComponent, memo, useMemo } from 'react';
-import { weatherList } from 'data/src';
+import { weatherList } from 'data';
 import { Layer, Path } from 'react-konva';
 import { extent } from 'd3-array';
 import { line } from 'd3-shape';
@@ -14,7 +14,7 @@ import {
   RightAxis,
   YTransformerContext,
   XTransformerContext,
-} from 'core/src';
+} from 'core';
 import { scaleLinear, scaleTime } from 'd3-scale';
 import { FirstProps } from './first.interface';
 
@@ -54,34 +54,37 @@ const FirstChartComponent: FunctionComponent<FirstProps> = (props) => {
     return [min ?? 0, max ?? 0];
   }, []);
 
-  const dimension = useMemo(() => {
-    return {
+  const dimension = useMemo(
+    () => ({
       width,
       height,
       yAxisSize,
       xAxisSize,
-    };
-  }, [width, height, xAxisSize, yAxisSize]);
+    }),
+    [width, height, xAxisSize, yAxisSize],
+  );
 
-  const xTransformerConfig = useMemo(() => {
-    return {
+  const xTransformerConfig = useMemo(
+    () => ({
       scale: scaleTime()
         .domain(xDomain)
         .range([15, (width ?? 0) - yAxisSize - 15])
         .nice(),
-    };
-  }, [xDomain, width, yAxisSize]);
+    }),
+    [xDomain, width, yAxisSize],
+  );
 
   const xTransformer = useTransformerState(xTransformerConfig);
 
-  const yTransformerConfig = useMemo(() => {
-    return {
+  const yTransformerConfig = useMemo(
+    () => ({
       scale: scaleLinear()
         .domain(yDomain)
         .range([(height ?? 0) - xAxisSize, 15])
         .nice(),
-    };
-  }, [yDomain, height, xAxisSize]);
+    }),
+    [yDomain, height, xAxisSize],
+  );
 
   const yTransformer = useTransformerState(yTransformerConfig);
 

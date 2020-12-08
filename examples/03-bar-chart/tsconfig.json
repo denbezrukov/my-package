@@ -1,5 +1,15 @@
 {
-  "extends": "../../tsconfig.json",
-  "include": ["src"],
-  "exclude": ["src/__data__/**", "src/__tests__/**", "src/__stories__/**"]
+  "extends": "../../tsconfig-base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "build"
+  },
+  "references": [
+    {
+      "path": "../data"
+    },
+    {
+      "path": "../../packages/core"
+    }
+  ]
 }

@@ -1,5 +1,5 @@
 import React, { FunctionComponent, memo, useMemo, useCallback } from 'react';
-import { weatherList, Weather } from 'data/src';
+import { weatherList, Weather } from 'data';
 import { Layer } from 'react-konva';
 import { extent } from 'd3-array';
 import {
@@ -10,7 +10,7 @@ import {
   YTransformerContext,
   XTransformerContext,
   LeftAxis,
-} from 'core/src';
+} from 'core';
 import { scaleLinear, scaleTime } from 'd3-scale';
 import { HumidityTimelineProps } from './humidityTimeline.interface';
 
@@ -25,9 +25,10 @@ const BarChartComponent: FunctionComponent<HumidityTimelineProps> = (props) => {
     return date.getTime();
   }, []);
 
-  const dataset = useMemo(() => {
-    return [...weatherList].sort((a, b) => xAccessor(a) - xAccessor(b));
-  }, [xAccessor]);
+  const dataset = useMemo(
+    () => [...weatherList].sort((a, b) => xAccessor(a) - xAccessor(b)),
+    [xAccessor],
+  );
 
   const xDomain = useMemo<[number, number]>(() => {
     const [left, right] = extent(dataset, xAccessor);
@@ -39,34 +40,37 @@ const BarChartComponent: FunctionComponent<HumidityTimelineProps> = (props) => {
     return [bottom ?? 0, top ?? 0];
   }, [dataset, yAccessor]);
 
-  const dimension = useMemo(() => {
-    return {
+  const dimension = useMemo(
+    () => ({
       width,
       height,
       yAxisSize,
       xAxisSize,
-    };
-  }, [width, height, xAxisSize, yAxisSize]);
+    }),
+    [width, height, xAxisSize, yAxisSize],
+  );
 
-  const xTransformerConfig = useMemo(() => {
-    return {
+  const xTransformerConfig = useMemo(
+    () => ({
       scale: scaleTime()
         .domain(xDomain)
         .range([yAxisSize + 15, width ?? 0])
         .nice(),
-    };
-  }, [xDomain, width, yAxisSize]);
+    }),
+    [xDomain, width, yAxisSize],
+  );
 
   const xTransformer = useTransformerState(xTransformerConfig);
 
-  const yTransformerConfig = useMemo(() => {
-    return {
+  const yTransformerConfig = useMemo(
+    () => ({
       scale: scaleLinear()
         .domain(yDomain)
         .range([(height ?? 0) - xAxisSize, 15])
         .nice(5),
-    };
-  }, [yDomain, height, xAxisSize]);
+    }),
+    [yDomain, height, xAxisSize],
+  );
 
   const yTransformer = useTransformerState(yTransformerConfig);
 

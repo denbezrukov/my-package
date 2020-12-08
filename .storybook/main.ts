@@ -2,7 +2,7 @@ import { Configuration, DefinePlugin } from 'webpack';
 import { withKnobs } from '@storybook/addon-knobs';
 
 export default {
-  stories: ['../packages/**/*.story.tsx', '../examples/**/*.story.tsx'],
+  stories: ['../packages/**/*.story.js', '../examples/**/*.story.js'],
   addons: [
     '@storybook/addon-knobs/register',
     '@storybook/addon-actions',
@@ -10,12 +10,12 @@ export default {
   ],
   decorators: [withKnobs],
   webpackFinal: async (config: Configuration) => {
-    config.module?.rules.push({
-      test: /\.tsx?$/,
-      loader: 'ts-loader',
-    });
+    // config.module?.rules.push({
+    //   test: /\.tsx?$/,
+    //   loader: 'ts-loader',
+    // });
 
-    config.resolve?.extensions?.push('.ts', '.tsx');
+    config.resolve?.extensions?.push('.js', '.jsx');
 
     config.plugins?.unshift(
       new DefinePlugin({

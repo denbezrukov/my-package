@@ -1,6 +1,6 @@
 import React, { FunctionComponent, memo } from 'react';
 import { Circle } from 'react-konva';
-import { useXTransformer, useYTransformer } from 'core/src';
+import { useXTransformer, useYTransformer } from 'core';
 import { useColorScale } from '../scatterPlot.constant';
 
 interface DotsProps {

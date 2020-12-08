@@ -1,5 +1,5 @@
 import React, { FunctionComponent, memo, useCallback, useMemo } from 'react';
-import { getTextSize, useDimension, useXTransformer } from 'core/src';
+import { getTextSize, useDimension, useXTransformer } from 'core';
 import { Line, Text } from 'react-konva';
 import { animated, config, Transition } from 'react-spring/renderprops-konva';
 
@@ -14,19 +14,18 @@ const MeanComponent: FunctionComponent<MeanProps> = (props) => {
 
   const { width: textWidth } = getTextSize('mean');
 
-  const items = useMemo(() => {
-    return [
+  const items = useMemo(
+    () => [
       {
         x: xTransform.transform(value),
         y: 0,
         index: 0,
       },
-    ];
-  }, [xTransform, value]);
+    ],
+    [xTransform, value],
+  );
 
-  const keys = useCallback((item: { index: number }) => {
-    return item.index;
-  }, []);
+  const keys = useCallback((item: { index: number }) => item.index, []);
 
   const from = useCallback(
     (item: { x: number }) => {

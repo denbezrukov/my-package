@@ -10,11 +10,10 @@
     "lint": "eslint --ext .js,.ts,.tsx .",
     "format": "prettier --write **/*.{js,ts,json,md}",
     "compile": "tsc --noEmit",
-    "build": "yarn clean && yarn build:cjs && yarn build:es",
-    "clean": "rimraf lib es dist",
-    "build:cjs": "tsc --outDir lib",
-    "build:es": "tsc --outDir es -m es2015",
-    "site": "yarn storybook:build",
+    "build": "ts-node scripts/src/builtTs.ts",
+    "build:watch": "yarn run build -w --pretty --preserveWatchOutput",
+    "build-clean": "rimraf ./packages/*/build ./packages/*/tsconfig.tsbuildinfo examples/*/build examples/*/tsconfig.tsbuildinfo",
+    "site": "yarn build && yarn storybook:build",
     "nojekyll": "shx mkdir -p site && shx touch site/.nojekyll",
     "storybook:dev": "start-storybook -p 6006",
     "storybook:build": "build-storybook --output-dir site/storybook --quiet --no-dll"
@@ -45,6 +44,7 @@
     "@typescript-eslint/eslint-plugin": "^4.9.0",
     "@typescript-eslint/parser": "^4.9.0",
     "babel-loader": "^8.2.2",
+    "chalk": "^4.1.0",
     "eslint": "^7.15.0",
     "eslint-config-airbnb-typescript": "^12.0.0",
     "eslint-config-prettier": "^7.0.0",
@@ -53,6 +53,7 @@
     "eslint-plugin-prettier": "^3.2.0",
     "eslint-plugin-react": "^7.21.5",
     "eslint-plugin-react-hooks": "^4.2.0",
+    "execa": "^5.0.0",
     "husky": "^4.3.4",
     "jest": "^26.6.3",
     "lint-staged": "^10.5.3",
@@ -63,20 +64,5 @@
     "ts-loader": "^8.0.11",
     "ts-node": "^9.1.0",
     "typescript": "^4.1.2"
-  },
-  "dependencies": {
-    "@types/d3-array": "^2.8.0",
-    "@types/d3-delaunay": "^5.3.0",
-    "@types/d3-scale": "^3.2.1",
-    "@types/d3-shape": "^2.0.0",
-    "d3-array": "^2.9.0",
-    "d3-delaunay": "^5.3.0",
-    "d3-scale": "^3.2.1",
-    "d3-shape": "^2.0.0",
-    "konva": "^7.2.0",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
-    "react-konva": "^17.0.0-0",
-    "react-spring": "^8.0.27"
   }
 }

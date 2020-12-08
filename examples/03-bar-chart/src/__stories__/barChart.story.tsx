@@ -1,7 +1,7 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { number, select, withKnobs } from '@storybook/addon-knobs';
-import { Weather } from 'data/src';
+import { Weather } from 'data';
 import { BarChart } from '../barChart';
 
 type Keys =

@@ -5,9 +5,9 @@ import { createTransformer } from '../createTransformer';
 export const useTransformerState = <Domain>(
   config: TransformerConfig<Domain>,
 ): Transformer<Domain> => {
-  const [transformer, setTransformer] = useState(() => {
-    return createTransformer(config);
-  });
+  const [transformer, setTransformer] = useState(() =>
+    createTransformer(config),
+  );
 
   const ref = useRef(false);
   useEffect(() => {

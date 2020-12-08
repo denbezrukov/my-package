@@ -33,15 +33,11 @@ const InteractiveStageComponent: FunctionComponent<InteractiveStageProps> = (
       const { clientX, clientY } = event;
 
       if (!disableXInteraction) {
-        xTransformer.setShift((shift) => {
-          return shift + clientX - point.x;
-        });
+        xTransformer.setShift((shift) => shift + clientX - point.x);
       }
 
       if (!disableYInteraction) {
-        yTransformer.setShift((shift) => {
-          return shift + clientY - point.y;
-        });
+        yTransformer.setShift((shift) => shift + clientY - point.y);
       }
     },
     [yTransformer, xTransformer, disableXInteraction, disableYInteraction],

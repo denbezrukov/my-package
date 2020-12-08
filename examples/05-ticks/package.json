@@ -1,7 +1,8 @@
 {
   "name": "05-ticks",
   "version": "1.0.0",
-  "main": "./src/index",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
   "devDependencies": {
     "@storybook/addon-knobs": "^6.1.10",
     "@storybook/react": "^6.1.10"

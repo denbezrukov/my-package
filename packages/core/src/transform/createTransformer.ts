@@ -1,9 +1,8 @@
 import { Transformer, TransformerConfig } from './transform.interface';
 import { rafDebounce } from '../utils/rafDebounce';
 
-const interpolateCanvasRound = (a: number, b: number) => (t: number) => {
-  return Math.round(a * (1 - t) + b * t) + 0.5;
-};
+const interpolateCanvasRound = (a: number, b: number) => (t: number) =>
+  Math.round(a * (1 - t) + b * t) + 0.5;
 
 export const createTransformer = <Domain>(
   config: TransformerConfig<Domain>,

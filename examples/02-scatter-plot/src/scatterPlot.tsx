@@ -1,5 +1,5 @@
 import React, { FunctionComponent, memo, useMemo } from 'react';
-import { weatherList } from 'data/src';
+import { weatherList } from 'data';
 import { Layer } from 'react-konva';
 import { extent } from 'd3-array';
 import {
@@ -8,7 +8,7 @@ import {
   useTransformerState,
   YTransformerContext,
   XTransformerContext,
-} from 'core/src';
+} from 'core';
 import { scaleLinear } from 'd3-scale';
 import { SecondProps } from './scatterPlot.interface';
 import { ColorScaleContext } from './scatterPlot.constant';
@@ -36,42 +36,47 @@ const ScatterPlotComponent: FunctionComponent<SecondProps> = (props) => {
     return [min ?? 0, max ?? 0];
   }, []);
 
-  const dimension = useMemo(() => {
-    return {
+  const dimension = useMemo(
+    () => ({
       width,
       height,
       yAxisSize,
       xAxisSize,
-    };
-  }, [width, height, xAxisSize, yAxisSize]);
+    }),
+    [width, height, xAxisSize, yAxisSize],
+  );
 
-  const xTransformerConfig = useMemo(() => {
-    return {
+  const xTransformerConfig = useMemo(
+    () => ({
       scale: scaleLinear()
         .domain(xDomain)
         .range([yAxisSize + 15, (width ?? 0) - 15])
         .nice(),
-    };
-  }, [xDomain, width, yAxisSize]);
+    }),
+    [xDomain, width, yAxisSize],
+  );
 
   const xTransformer = useTransformerState(xTransformerConfig);
 
-  const yTransformerConfig = useMemo(() => {
-    return {
+  const yTransformerConfig = useMemo(
+    () => ({
       scale: scaleLinear()
         .domain(yDomain)
         .range([(height ?? 0) - xAxisSize, 15])
         .nice(),
-    };
-  }, [yDomain, height, xAxisSize]);
+    }),
+    [yDomain, height, xAxisSize],
+  );
 
   const yTransformer = useTransformerState(yTransformerConfig);
 
-  const colorScale = useMemo(() => {
-    return scaleLinear<string>()
-      .domain(colorDomain)
-      .range(['skyblue', 'darkslategrey']);
-  }, [colorDomain]);
+  const colorScale = useMemo(
+    () =>
+      scaleLinear<string>()
+        .domain(colorDomain)
+        .range(['skyblue', 'darkslategrey']),
+    [colorDomain],
+  );
 
   return (
     <DimensionContext.Provider value={dimension}>

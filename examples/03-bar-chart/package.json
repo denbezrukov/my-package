@@ -1,6 +1,8 @@
 {
   "name": "03-bar-chart",
   "version": "1.0.0",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
   "devDependencies": {
     "@storybook/addon-knobs": "^6.1.10",
     "@storybook/react": "^6.1.10"

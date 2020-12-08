@@ -14,11 +14,9 @@ interface ProtoTick {
   o: number;
 }
 
-export const ticksList: Tick[] = (ticks as ProtoTick[]).map((tick) => {
-  return {
-    low: tick.l,
-    high: tick.h,
-    close: tick.c,
-    open: tick.o,
-  };
-});
+export const ticksList: Tick[] = (ticks as ProtoTick[]).map((tick) => ({
+  low: tick.l,
+  high: tick.h,
+  close: tick.c,
+  open: tick.o,
+}));

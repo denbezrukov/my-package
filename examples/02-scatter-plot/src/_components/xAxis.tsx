@@ -1,5 +1,5 @@
 import React, { FunctionComponent, memo } from 'react';
-import { BottomAxis, useDimension, getTextSize } from 'core/src';
+import { BottomAxis, useDimension, getTextSize } from 'core';
 import { Text } from 'react-konva';
 
 const XAxisComponent: FunctionComponent = () => {

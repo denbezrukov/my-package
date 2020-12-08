@@ -1,5 +1,5 @@
 import React, { FunctionComponent, memo } from 'react';
-import { getTextSize, LeftAxis, useDimension } from 'core/src';
+import { getTextSize, LeftAxis, useDimension } from 'core';
 import { Text } from 'react-konva';
 
 const YAxisComponent: FunctionComponent = () => {

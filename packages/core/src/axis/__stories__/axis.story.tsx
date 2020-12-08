@@ -33,9 +33,7 @@ export const YInteractionStage: FunctionComponent = () => {
   const onMove: DragInteraction = useCallback(
     (event, point) => {
       const { clientY } = event;
-      setShift((shift) => {
-        return shift + clientY - point.y;
-      });
+      setShift((shift) => shift + clientY - point.y);
     },
     [setShift],
   );
@@ -71,9 +69,7 @@ export const XInteractionStage: FunctionComponent = () => {
   const onMove: DragInteraction = useCallback(
     (event, point) => {
       const { clientX } = event;
-      setShift((shift) => {
-        return shift + clientX - point.x;
-      });
+      setShift((shift) => shift + clientX - point.x);
     },
     [setShift],
   );
@@ -112,22 +108,24 @@ storiesOf('Axis', module)
     const from = number('from', 0);
     const to = number('to', 400);
 
-    const config = useMemo(() => {
-      return {
+    const config = useMemo(
+      () => ({
         scale: scaleLinear().domain([from, to]).range([0, width]),
-      };
-    }, [from, to, width]);
+      }),
+      [from, to, width],
+    );
 
     const transformer = useTransformerState(config);
 
-    const dimension = useMemo(() => {
-      return {
+    const dimension = useMemo(
+      () => ({
         width,
         height,
         yAxisSize: 0,
         xAxisSize: size,
-      };
-    }, [width, height, size]);
+      }),
+      [width, height, size],
+    );
 
     return (
       <Stage style={containerStyles} width={width} height={height}>
@@ -146,21 +144,23 @@ storiesOf('Axis', module)
     const from = number('from', 0);
     const to = number('to', 100);
 
-    const config = useMemo(() => {
-      return {
+    const config = useMemo(
+      () => ({
         scale: scaleLinear().domain([from, to]).range([height, 0]),
-      };
-    }, [from, to, height]);
+      }),
+      [from, to, height],
+    );
 
     const transformer = useTransformerState(config);
-    const dimension = useMemo(() => {
-      return {
+    const dimension = useMemo(
+      () => ({
         width,
         height,
         yAxisSize: size,
         xAxisSize: 0,
-      };
-    }, [width, height, size]);
+      }),
+      [width, height, size],
+    );
 
     return (
       <Stage style={containerStyles} width={width} height={height}>

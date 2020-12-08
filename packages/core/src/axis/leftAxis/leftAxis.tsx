@@ -26,9 +26,7 @@ const LeftAxisComponent: FunctionComponent<AxisProps> = (props) => {
   const onMove: DragInteraction = useCallback(
     (event, point) => {
       const { clientY } = event;
-      setScale((scale) => {
-        return scale + clientY - point.y;
-      });
+      setScale((scale) => scale + clientY - point.y);
     },
     [setScale],
   );

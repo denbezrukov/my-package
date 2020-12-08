@@ -1,4 +1,4 @@
-import { Weather } from 'data/src';
+import { Weather } from 'data';
 
 export interface BarChartProps {
   width: number;

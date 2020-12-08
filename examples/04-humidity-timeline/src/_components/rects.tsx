@@ -10,10 +10,10 @@ import {
   useDimension,
   useXTransformer,
   useYTransformer,
-} from 'core/src';
+} from 'core';
 import { Bin, max } from 'd3-array';
 import { animated, config, Transition } from 'react-spring/renderprops-konva';
-import { Weather } from 'data/src';
+import { Weather } from 'data';
 
 interface IRectProps {
   x0: number;
@@ -89,23 +89,23 @@ const RectsComponent: FunctionComponent<RectsProps> = (props) => {
 
   const initialY = dimension.height - dimension.xAxisSize;
 
-  const items = useMemo(() => {
-    return bins.map((item, index) => {
-      const { x0, x1, length } = item;
+  const items = useMemo(
+    () =>
+      bins.map((item, index) => {
+        const { x0, x1, length } = item;
 
-      return {
-        x0: xTransform.transform(x0 ?? 0),
-        x1: xTransform.transform(x1 ?? 0),
-        y: yTransform.transform(length ?? 0),
-        length,
-        index,
-      };
-    });
-  }, [bins, xTransform, yTransform]);
+        return {
+          x0: xTransform.transform(x0 ?? 0),
+          x1: xTransform.transform(x1 ?? 0),
+          y: yTransform.transform(length ?? 0),
+          length,
+          index,
+        };
+      }),
+    [bins, xTransform, yTransform],
+  );
 
-  const keys = useCallback((item: TransitionItem) => {
-    return item.index;
-  }, []);
+  const keys = useCallback((item: TransitionItem) => item.index, []);
 
   const initial = useCallback(
     (item: TransitionItem) => {

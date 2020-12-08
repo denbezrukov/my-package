@@ -27,39 +27,38 @@ storiesOf('Interactive Stage', module)
     const xAxisSize = number('xAxisSize', 20);
     const yAxisSize = number('yAxisSize', 40);
 
-    const xDomain = useMemo<[number, number]>(() => {
-      return [xFrom, xTo];
-    }, [xFrom, xTo]);
-    const yDomain = useMemo<[number, number]>(() => {
-      return [yFrom, yTo];
-    }, [yFrom, yTo]);
+    const xDomain = useMemo<[number, number]>(() => [xFrom, xTo], [xFrom, xTo]);
+    const yDomain = useMemo<[number, number]>(() => [yFrom, yTo], [yFrom, yTo]);
 
-    const dimension = useMemo(() => {
-      return {
+    const dimension = useMemo(
+      () => ({
         width,
         height,
         yAxisSize,
         xAxisSize,
-      };
-    }, [width, height, xAxisSize, yAxisSize]);
+      }),
+      [width, height, xAxisSize, yAxisSize],
+    );
 
-    const xTransformerConfig = useMemo(() => {
-      return {
+    const xTransformerConfig = useMemo(
+      () => ({
         scale: scaleLinear()
           .domain(xDomain)
           .range([0, (width ?? 0) - yAxisSize]),
-      };
-    }, [xDomain, width, yAxisSize]);
+      }),
+      [xDomain, width, yAxisSize],
+    );
 
     const xTransformer = useTransformerState(xTransformerConfig);
 
-    const yTransformerConfig = useMemo(() => {
-      return {
+    const yTransformerConfig = useMemo(
+      () => ({
         scale: scaleLinear()
           .domain(yDomain)
           .range([(height ?? 0) + xAxisSize, 0]),
-      };
-    }, [yDomain, height, xAxisSize]);
+      }),
+      [yDomain, height, xAxisSize],
+    );
 
     const yTransformer = useTransformerState(yTransformerConfig);
 

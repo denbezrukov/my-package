@@ -20,34 +20,37 @@ storiesOf('Grid', module)
     const from = number('from', 0);
     const to = number('to', 100);
 
-    const xTransformerConfig = useMemo(() => {
-      return {
+    const xTransformerConfig = useMemo(
+      () => ({
         scale: scaleLinear()
           .domain([from, to])
           .range([10, width - 10]),
-      };
-    }, [from, to, width]);
+      }),
+      [from, to, width],
+    );
 
     const xTransformer = useTransformerState(xTransformerConfig);
 
-    const yTransformerConfig = useMemo(() => {
-      return {
+    const yTransformerConfig = useMemo(
+      () => ({
         scale: scaleLinear()
           .domain([from, to])
           .range([10, width - 10]),
-      };
-    }, [from, to, width]);
+      }),
+      [from, to, width],
+    );
 
     const yTransformer = useTransformerState(yTransformerConfig);
 
-    const dimension = useMemo(() => {
-      return {
+    const dimension = useMemo(
+      () => ({
         width,
         height,
         yAxisSize: 0,
         xAxisSize: 0,
-      };
-    }, [width, height]);
+      }),
+      [width, height],
+    );
 
     return (
       <Stage width={width} height={height}>
