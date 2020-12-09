@@ -3,6 +3,9 @@
   "compilerOptions": {
     "module": "commonjs",
     "allowJs": true,
+    "resolveJsonModule": true,
+    "composite": false
   },
+  "include": ["./examples/**/*.json"],
   "exclude": ["node_modules", "**/build/**/"]
 }

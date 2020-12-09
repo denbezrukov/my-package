@@ -14,7 +14,7 @@
     "prettier/@typescript-eslint"
   ],
   "parserOptions": {
-    "project": "./tsconfig.json"
+    "project": "./tsconfig-base.json"
   },
   "plugins": ["prettier"],
   "rules": {
