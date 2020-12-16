@@ -20,7 +20,8 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn compile && lint-staged"
+      "pre-commit": "yarn compile && lint-staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   },
   "lint-staged": {
@@ -34,6 +35,8 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
+    "@commitlint/cli": "^11.0.0",
+    "@commitlint/config-conventional": "^11.0.0",
     "@storybook/addon-actions": "^6.1.11",
     "@storybook/addon-knobs": "^6.1.11",
     "@storybook/addon-links": "^6.1.11",
