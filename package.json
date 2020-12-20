@@ -13,7 +13,7 @@
     "build": "ts-node scripts/src/builtTs.ts",
     "build:watch": "yarn run build -w --pretty --preserveWatchOutput",
     "build-clean": "rimraf ./packages/*/build ./packages/*/tsconfig.tsbuildinfo examples/*/build examples/*/tsconfig.tsbuildinfo",
-    "site": "yarn build && yarn storybook:build",
+    "site": "yarn build-clean && yarn build && yarn storybook:build",
     "nojekyll": "shx mkdir -p site && shx touch site/.nojekyll",
     "storybook:dev": "start-storybook -p 6006",
     "storybook:build": "build-storybook --output-dir site/storybook --quiet --no-dll"
