@@ -14,14 +14,13 @@
     "lint": "eslint --ext .js,.ts,.tsx .",
     "nojekyll": "shx mkdir -p site && shx touch site/.nojekyll",
     "site": "yarn build-clean && yarn build && yarn storybook:build",
-    "sort": "sort-package-json {packages,examples}/*/package.json",
     "storybook:build": "build-storybook --output-dir site/storybook --quiet --no-dll",
     "storybook:dev": "start-storybook -p 6006",
     "test": "jest"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn sort && yarn compile && lint-staged",
+      "pre-commit": "yarn compile && lint-staged",
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   },
@@ -32,7 +31,8 @@
     ],
     "**/*.{json,md}": [
       "yarn format"
-    ]
+    ],
+    "package.json": "sort-package-json"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
