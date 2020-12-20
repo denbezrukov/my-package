@@ -2,5 +2,11 @@
   "name": "data",
   "version": "1.0.0",
   "main": "build/index.js",
-  "types": "build/index.d.ts"
+  "types": "build/index.d.ts",
+  "dependencies": {
+    "d3-dsv": "^2.0.0"
+  },
+  "devDependencies": {
+    "@types/d3-dsv": "^2.0.0"
+  }
 }
