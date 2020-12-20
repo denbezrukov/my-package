@@ -9,9 +9,9 @@ script:
   - yarn compile
   - yarn lint
 #   - yarn test
-#cache:
-#  directories:
-#    - "node_modules"
+cache:
+  directories:
+    - "node_modules"
 before_deploy:
   - yarn site
 deploy:
