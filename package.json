@@ -1,22 +1,22 @@
 {
-  "license": "MIT",
   "private": true,
+  "license": "MIT",
   "workspaces": [
     "packages/*",
     "examples/*"
   ],
   "scripts": {
-    "test": "jest",
-    "lint": "eslint --ext .js,.ts,.tsx .",
-    "format": "prettier --write **/*.{js,ts,json,md}",
-    "compile": "tsc --noEmit",
     "build": "ts-node scripts/src/builtTs.ts",
-    "build:watch": "yarn run build -w --pretty --preserveWatchOutput",
     "build-clean": "rimraf ./packages/*/build ./packages/*/tsconfig.tsbuildinfo examples/*/build examples/*/tsconfig.tsbuildinfo",
-    "site": "yarn build-clean && yarn build && yarn storybook:build",
+    "build:watch": "yarn run build -w --pretty --preserveWatchOutput",
+    "compile": "tsc --noEmit",
+    "format": "prettier --write **/*.{js,ts,json,md}",
+    "lint": "eslint --ext .js,.ts,.tsx .",
     "nojekyll": "shx mkdir -p site && shx touch site/.nojekyll",
+    "site": "yarn build-clean && yarn build && yarn storybook:build",
+    "storybook:build": "build-storybook --output-dir site/storybook --quiet --no-dll",
     "storybook:dev": "start-storybook -p 6006",
-    "storybook:build": "build-storybook --output-dir site/storybook --quiet --no-dll"
+    "test": "jest"
   },
   "husky": {
     "hooks": {
@@ -31,7 +31,8 @@
     ],
     "**/*.{json,md}": [
       "yarn format"
-    ]
+    ],
+    "{packages,examples}/*/package.json": "sort-package-json"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
@@ -63,6 +64,7 @@
     "prettier": "^2.2.1",
     "rimraf": "^3.0.2",
     "shx": "^0.3.3",
+    "sort-package-json": "^1.48.0",
     "ts-jest": "^26.4.4",
     "ts-loader": "^8.0.12",
     "ts-node": "^9.1.1",
