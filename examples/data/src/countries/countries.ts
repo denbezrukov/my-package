@@ -1,23 +1,20 @@
-import countries from './countries.json';
 import { csvParse } from 'd3-dsv';
+import countries from './countries.json';
 import { data } from './data';
+import { GeoPermissibleObjects } from 'd3-geo';
 
 export interface Countries {
   features: Country[];
 }
 
 export interface Country {
-  geometry: Geometry;
+  geometry: GeoPermissibleObjects;
   properties: Properties;
 }
 
 export interface Properties {
   ADM0_A3_IS: string;
   NAME: string;
-}
-
-export interface Geometry {
-  coordinates: Coordinate[];
 }
 
 export type Coordinate = [number, number];
@@ -30,5 +27,5 @@ export interface CountryInfo {
   'Series Name': string;
 }
 
-export const countryList: Country[] = (countries as any).features;
-export const countryInfo = csvParse(data) as unknown as CountryInfo[];
+export const countryList = (countries as Countries).features;
+export const countryInfo = (csvParse(data) as unknown) as CountryInfo[];

@@ -6,6 +6,6 @@
     "resolveJsonModule": true,
     "composite": false
   },
-  "include": ["./examples/**/*.json"],
+  //  "include": ["./examples/**/*.json",
   "exclude": ["node_modules", "**/build/**/"]
 }
