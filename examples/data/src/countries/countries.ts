@@ -1,7 +1,7 @@
 import { csvParse } from 'd3-dsv';
+import { GeoPermissibleObjects } from 'd3-geo';
 import countries from './countries.json';
 import { data } from './data';
-import { GeoPermissibleObjects } from 'd3-geo';
 
 export interface Countries {
   features: Country[];
