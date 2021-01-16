@@ -14,7 +14,9 @@ import {
 import { scaleLinear, scaleTime } from 'd3-scale';
 import { HumidityTimelineProps } from './humidityTimeline.interface';
 
-const BarChartComponent: FunctionComponent<HumidityTimelineProps> = (props) => {
+const HumidityTimelineComponent: FunctionComponent<HumidityTimelineProps> = (
+  props,
+) => {
   const { width, height } = props;
   const yAxisSize = 50;
   const xAxisSize = 30;
@@ -91,4 +93,4 @@ const BarChartComponent: FunctionComponent<HumidityTimelineProps> = (props) => {
   );
 };
 
-export const HumidityTimeline = memo(BarChartComponent);
+export const HumidityTimeline = memo(HumidityTimelineComponent);

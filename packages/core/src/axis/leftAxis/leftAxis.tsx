@@ -11,7 +11,7 @@ import { useDimension } from '../../dimension/useDimension';
 import { AxisProps } from '../axis.interface';
 
 const LeftAxisComponent: FunctionComponent<AxisProps> = (props) => {
-  const { children } = props;
+  const { fill = 'white', children } = props;
   const { height, yAxisSize } = useDimension();
   const x = yAxisSize + 0.5;
 
@@ -43,7 +43,7 @@ const LeftAxisComponent: FunctionComponent<AxisProps> = (props) => {
 
   return (
     <Group x={0} y={0} onDblClick={onDblClick} onMouseDown={onMouseDown}>
-      <Rect x={0} y={0} height={height} width={yAxisSize} fill="white" />
+      <Rect x={0} y={0} height={height} width={yAxisSize} fill={fill} />
       <Line points={[x, 0, x, height]} stroke="black" strokeWidth={1} />
       {transform.ticks().map((tick, index) => {
         const y = transform(tick);
