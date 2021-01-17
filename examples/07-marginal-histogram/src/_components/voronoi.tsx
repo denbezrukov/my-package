@@ -11,16 +11,16 @@ import {
 interface CellProps {
   index: number;
   data: string;
-  onMouseMove: (index: number) => void;
+  onMouseEnter: (index: number) => void;
   onMouseLeave?: () => void;
 }
 
 const Cell: React.FunctionComponent<CellProps> = (props) => {
-  const { data, index, onMouseMove, onMouseLeave } = props;
+  const { data, index, onMouseEnter, onMouseLeave } = props;
 
   const handleMouseMove = useCallback(() => {
-    onMouseMove(index);
-  }, [onMouseMove, index]);
+    onMouseEnter(index);
+  }, [onMouseEnter, index]);
 
   const handleMouseLeave = useCallback(() => {
     onMouseLeave?.();
@@ -30,7 +30,6 @@ const Cell: React.FunctionComponent<CellProps> = (props) => {
     <Path
       key={data}
       data={data}
-      fill="transparent"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     />
@@ -67,7 +66,7 @@ const VoronoiComponent: React.FunctionComponent<VoronoiProps> = (props) => {
     yAccessor,
   ]);
 
-  const onMouseMove = useCallback(
+  const onMouseEnter = useCallback(
     (index: number) => {
       const weather = weatherList[index];
 
@@ -86,7 +85,7 @@ const VoronoiComponent: React.FunctionComponent<VoronoiProps> = (props) => {
             key={`cell-${index}`}
             index={index}
             data={data}
-            onMouseMove={onMouseMove}
+            onMouseEnter={onMouseEnter}
           />
         );
       })}
