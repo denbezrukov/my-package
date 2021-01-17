@@ -1,12 +1,8 @@
-import React, { FunctionComponent, memo, useCallback, useState } from 'react';
-import { Circle, Ring } from 'react-konva';
+import React, { FunctionComponent, memo } from 'react';
+import { Circle } from 'react-konva';
 import { useXTransformer, useYTransformer } from 'core';
 import { Weather } from 'data';
-import {
-  useAccessors,
-  useColorScale,
-  useSetHoverPoint,
-} from '../marginalHistogram.constant';
+import { useAccessors, useColorScale } from '../marginalHistogram.constant';
 
 interface DotProps {
   weather: Weather;
@@ -14,7 +10,6 @@ interface DotProps {
 
 const DotComponent: FunctionComponent<DotProps> = (props) => {
   const { weather } = props;
-  const [isHovered, setHovered] = useState(false);
 
   const { transform: xTransform } = useXTransformer();
   const { transform: yTransform } = useYTransformer();
@@ -24,31 +19,10 @@ const DotComponent: FunctionComponent<DotProps> = (props) => {
   const x = xTransform(xAccessor(weather));
   const y = yTransform(yAccessor(weather));
   const fill = colorScale(colorAccessor(weather));
-  const setHoverPoint = useSetHoverPoint();
-
-  const onMouseOver = useCallback(() => {
-    setHovered(() => true);
-    setHoverPoint({ x, y });
-  }, [setHovered, setHoverPoint, x, y]);
-
-  const onMouseLeave = useCallback(() => {
-    setHovered(() => false);
-    setHoverPoint(undefined);
-  }, [setHovered, setHoverPoint]);
 
   return (
     <>
-      {isHovered && (
-        <Ring x={x} y={y} innerRadius={7} outerRadius={9} fill="#6F1E51" />
-      )}
-      <Circle
-        radius={4}
-        x={x}
-        y={y}
-        fill={fill}
-        onMouseOver={onMouseOver}
-        onMouseLeave={onMouseLeave}
-      />
+      <Circle radius={4} x={x} y={y} fill={fill} />
     </>
   );
 };

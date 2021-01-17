@@ -71,7 +71,7 @@ const VoronoiComponent: React.FunctionComponent<VoronoiProps> = (props) => {
       setNeighbors(value);
       setCenterIndex(index);
     },
-    [setNeighbors],
+    [setNeighbors, setCenterIndex],
   );
 
   const voronoi = useMemo(() => {

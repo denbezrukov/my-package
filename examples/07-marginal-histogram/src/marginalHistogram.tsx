@@ -5,7 +5,7 @@ import React, {
   useState,
   useMemo,
 } from 'react';
-import { Layer, Rect, Stage } from 'react-konva';
+import { Layer, Rect, Ring, Stage } from 'react-konva';
 import { Weather, weatherList } from 'data';
 import { extent } from 'd3-array';
 import { scaleLinear, scaleSequential } from 'd3-scale';
@@ -30,6 +30,7 @@ import {
 } from './marginalHistogram.constant';
 import { TopHistogram } from './_components/topHistogram';
 import { RightHistogram } from './_components/rightHistogram';
+import { Voronoi } from './_components/voronoi';
 
 const MarginalHistogramComponent: FunctionComponent<HistogramProps> = (
   props,
@@ -128,6 +129,10 @@ const MarginalHistogramComponent: FunctionComponent<HistogramProps> = (
     alignItems: 'flex-end',
   };
 
+  const onMouseLeave = useCallback(() => {
+    setPoint(undefined);
+  }, [setPoint]);
+
   return (
     <div style={containerStyle}>
       <div style={rowStyle}>
@@ -147,13 +152,23 @@ const MarginalHistogramComponent: FunctionComponent<HistogramProps> = (
           <DimensionContext.Provider value={dimension}>
             <XTransformerContext.Provider value={xTransformer}>
               <YTransformerContext.Provider value={yTransformer}>
-                <InteractiveStage>
+                <InteractiveStage onMouseLeave={onMouseLeave}>
                   <SetHoverPointContext.Provider value={setPointContext}>
                     <ColorScaleContext.Provider value={colorScale}>
                       <AccessorsContext.Provider value={accessors}>
                         <Layer>
                           <Rect width={width} height={height} fill="white" />
                           <Dots weatherList={weatherList} />
+                          <Voronoi weatherList={weatherList} />
+                          {point && (
+                            <Ring
+                              x={point.x}
+                              y={point.y}
+                              innerRadius={7}
+                              outerRadius={9}
+                              fill="#6F1E51"
+                            />
+                          )}
                         </Layer>
                         <Layer>
                           <XAxis />
@@ -167,6 +182,7 @@ const MarginalHistogramComponent: FunctionComponent<HistogramProps> = (
             </XTransformerContext.Provider>
           </DimensionContext.Provider>
         </div>
+
         <Stage width={80} height={dimension.height}>
           <HoverPointContext.Provider value={point}>
             <YTransformerContext.Provider value={yTransformer}>
