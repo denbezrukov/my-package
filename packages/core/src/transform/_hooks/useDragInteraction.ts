@@ -1,23 +1,25 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useRef, useMemo } from 'react';
 import Konva from 'konva';
 import { Point } from '../transform.interface';
+import { rafDebounce } from '../../utils/rafDebounce';
 
 export type DragInteraction = (event: MouseEvent, prevPoint: Point) => void;
 
 export const useDragInteraction = (callback: DragInteraction) => {
   const point = useRef<Point | null>(null);
 
-  const onMouseMove = useCallback(
-    (event: MouseEvent) => {
-      const { clientX, clientY } = event;
+  const onMouseMove = useMemo(
+    () =>
+      rafDebounce((event: MouseEvent) => {
+        const { clientX, clientY } = event;
 
-      callback(event, point.current ?? { x: 0, y: 0 });
+        callback(event, point.current ?? { x: 0, y: 0 });
 
-      point.current = {
-        x: clientX,
-        y: clientY,
-      };
-    },
+        point.current = {
+          x: clientX,
+          y: clientY,
+        };
+      }),
     [point, callback],
   );
 
@@ -32,6 +34,8 @@ export const useDragInteraction = (callback: DragInteraction) => {
       };
 
       const onMouseUp = () => {
+        onMouseMove.cancel();
+
         document.removeEventListener('mousemove', onMouseMove);
         document.removeEventListener('mouseup', onMouseUp);
       };

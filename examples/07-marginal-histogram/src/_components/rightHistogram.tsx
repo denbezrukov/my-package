@@ -56,7 +56,7 @@ const RightHistogramComponent: FunctionComponent<TopHistogramProps> = (
       <Path data={data} fill="#cbd2d7" />
       {point && (
         <Rect
-          x={point.x}
+          x={point.y}
           height={histogramHeight + 10}
           fill="#5758BB"
           width={hoverLineThickness}
