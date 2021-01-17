@@ -59,7 +59,7 @@ const RightHistogramComponent: FunctionComponent<TopHistogramProps> = (
       <Path data={data} fill="#cbd2d7" />
       {selectedWeather && (
         <Rect
-          x={transform(yAccessor(selectedWeather))}
+          x={transform(yAccessor(selectedWeather)) - hoverLineThickness / 2}
           height={histogramHeight + 10}
           fill="#5758BB"
           width={hoverLineThickness}
