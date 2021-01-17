@@ -3,21 +3,24 @@ import React, { memo, useCallback, useMemo } from 'react';
 import { useDimension, useXTransformer, useYTransformer } from 'core';
 import { Path } from 'react-konva';
 import { Weather } from 'data';
-import { useAccessors, useSetHoverPoint } from '../marginalHistogram.constant';
+import {
+  useAccessors,
+  useSetSelectedWeather,
+} from '../marginalHistogram.constant';
 
 interface CellProps {
   index: number;
   data: string;
-  onMouseEnter: (index: number) => void;
+  onMouseMove: (index: number) => void;
   onMouseLeave?: () => void;
 }
 
 const Cell: React.FunctionComponent<CellProps> = (props) => {
-  const { data, index, onMouseEnter, onMouseLeave } = props;
+  const { data, index, onMouseMove, onMouseLeave } = props;
 
-  const handleMouseEnter = useCallback(() => {
-    onMouseEnter(index);
-  }, [onMouseEnter, index]);
+  const handleMouseMove = useCallback(() => {
+    onMouseMove(index);
+  }, [onMouseMove, index]);
 
   const handleMouseLeave = useCallback(() => {
     onMouseLeave?.();
@@ -28,7 +31,7 @@ const Cell: React.FunctionComponent<CellProps> = (props) => {
       key={data}
       data={data}
       fill="transparent"
-      onMouseEnter={handleMouseEnter}
+      onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     />
   );
@@ -42,7 +45,7 @@ const VoronoiComponent: React.FunctionComponent<VoronoiProps> = (props) => {
   const { weatherList } = props;
   const { width, height } = useDimension();
   const { xAccessor, yAccessor } = useAccessors();
-  const setHoverPoint = useSetHoverPoint();
+  const setSelectedWeather = useSetSelectedWeather();
 
   const xTransformer = useXTransformer();
   const yTransformer = useYTransformer();
@@ -64,22 +67,13 @@ const VoronoiComponent: React.FunctionComponent<VoronoiProps> = (props) => {
     yAccessor,
   ]);
 
-  const onMouseEnter = useCallback(
+  const onMouseMove = useCallback(
     (index: number) => {
       const weather = weatherList[index];
-      const x = xTransformer.transform(xAccessor(weather));
-      const y = yTransformer.transform(yAccessor(weather));
 
-      setHoverPoint({ x, y });
+      setSelectedWeather(weather);
     },
-    [
-      weatherList,
-      setHoverPoint,
-      xTransformer,
-      yTransformer,
-      xAccessor,
-      yAccessor,
-    ],
+    [weatherList, setSelectedWeather],
   );
 
   return (
@@ -92,7 +86,7 @@ const VoronoiComponent: React.FunctionComponent<VoronoiProps> = (props) => {
             key={`cell-${index}`}
             index={index}
             data={data}
-            onMouseEnter={onMouseEnter}
+            onMouseMove={onMouseMove}
           />
         );
       })}

@@ -5,7 +5,10 @@ import { bin, extent } from 'd3-array';
 import { Weather } from 'data';
 import { scaleLinear } from 'd3-scale';
 import { area, curveBasis } from 'd3-shape';
-import { useAccessors, useHoverPoint } from '../marginalHistogram.constant';
+import {
+  useAccessors,
+  useSelectedWeather,
+} from '../marginalHistogram.constant';
 
 interface TopHistogramProps {
   weatherList: Weather[];
@@ -17,7 +20,7 @@ const TopHistogramComponent: FunctionComponent<TopHistogramProps> = (props) => {
   const { weatherList } = props;
   const { transform } = useXTransformer<number>();
   const { xAccessor } = useAccessors();
-  const point = useHoverPoint();
+  const selectedWeather = useSelectedWeather();
 
   const bins = useMemo(() => {
     const [left, right] = transform.domain();
@@ -52,9 +55,9 @@ const TopHistogramComponent: FunctionComponent<TopHistogramProps> = (props) => {
   return data !== null ? (
     <>
       <Path data={data} fill="#cbd2d7" />
-      {point && (
+      {selectedWeather && (
         <Rect
-          x={point.x}
+          x={transform(xAccessor(selectedWeather))}
           height={histogramHeight + 10}
           fill="#5758BB"
           width={hoverLineThickness}

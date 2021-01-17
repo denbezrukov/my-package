@@ -39,12 +39,15 @@ export interface Point {
   y: number;
 }
 
-export const HoverPointContext = createContext<Point | undefined>(undefined);
+export const SelectedWeatherContext = createContext<Weather | undefined>(
+  undefined,
+);
 
-export const useHoverPoint = () => useContext(HoverPointContext);
+export const useSelectedWeather = () => useContext(SelectedWeatherContext);
 
-export const SetHoverPointContext = createContext<
-  (point: Point | undefined) => void
+export const SetSelectedWeatherContext = createContext<
+  (point: Weather | undefined) => void
 >(() => undefined);
 
-export const useSetHoverPoint = () => useContext(SetHoverPointContext);
+export const useSetSelectedWeather = () =>
+  useContext(SetSelectedWeatherContext);

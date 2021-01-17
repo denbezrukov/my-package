@@ -24,9 +24,8 @@ import { YAxis } from './_components/yAxis';
 import {
   AccessorsContext,
   ColorScaleContext,
-  HoverPointContext,
-  Point,
-  SetHoverPointContext,
+  SetSelectedWeatherContext,
+  SelectedWeatherContext,
 } from './marginalHistogram.constant';
 import { TopHistogram } from './_components/topHistogram';
 import { RightHistogram } from './_components/rightHistogram';
@@ -104,11 +103,13 @@ const MarginalHistogramComponent: FunctionComponent<HistogramProps> = (
     [dateExtent],
   );
 
-  const [point, setPoint] = useState<Point | undefined>(undefined);
+  const [selectedWeather, setSelectedWeather] = useState<Weather | undefined>(
+    undefined,
+  );
 
-  const setPointContext = useCallback(
-    (nextPoint: Point | undefined) => setPoint(() => nextPoint),
-    [setPoint],
+  const setWeatherContext = useCallback(
+    (value: Weather | undefined) => setSelectedWeather(() => value),
+    [setSelectedWeather],
   );
 
   const containerStyle = {
@@ -130,15 +131,15 @@ const MarginalHistogramComponent: FunctionComponent<HistogramProps> = (
   };
 
   const onMouseLeave = useCallback(() => {
-    setPoint(undefined);
-  }, [setPoint]);
+    setSelectedWeather(undefined);
+  }, [setSelectedWeather]);
 
   return (
     <div style={containerStyle}>
       <div style={rowStyle}>
         <div style={columnStyle}>
           <Stage width={dimension.width} height={80}>
-            <HoverPointContext.Provider value={point}>
+            <SelectedWeatherContext.Provider value={selectedWeather}>
               <XTransformerContext.Provider value={xTransformer}>
                 <AccessorsContext.Provider value={accessors}>
                   <Layer>
@@ -146,24 +147,28 @@ const MarginalHistogramComponent: FunctionComponent<HistogramProps> = (
                   </Layer>
                 </AccessorsContext.Provider>
               </XTransformerContext.Provider>
-            </HoverPointContext.Provider>
+            </SelectedWeatherContext.Provider>
           </Stage>
 
           <DimensionContext.Provider value={dimension}>
             <XTransformerContext.Provider value={xTransformer}>
               <YTransformerContext.Provider value={yTransformer}>
-                <InteractiveStage onMouseLeave={onMouseLeave}>
-                  <SetHoverPointContext.Provider value={setPointContext}>
+                <InteractiveStage>
+                  <SetSelectedWeatherContext.Provider value={setWeatherContext}>
                     <ColorScaleContext.Provider value={colorScale}>
                       <AccessorsContext.Provider value={accessors}>
-                        <Layer>
+                        <Layer onMouseLeave={onMouseLeave}>
                           <Rect width={width} height={height} fill="white" />
                           <Dots weatherList={weatherList} />
                           <Voronoi weatherList={weatherList} />
-                          {point && (
+                          {selectedWeather && (
                             <Ring
-                              x={point.x}
-                              y={point.y}
+                              x={xTransformer.transform(
+                                accessors.xAccessor(selectedWeather),
+                              )}
+                              y={yTransformer.transform(
+                                accessors.yAccessor(selectedWeather),
+                              )}
                               innerRadius={7}
                               outerRadius={9}
                               fill="#6F1E51"
@@ -176,7 +181,7 @@ const MarginalHistogramComponent: FunctionComponent<HistogramProps> = (
                         </Layer>
                       </AccessorsContext.Provider>
                     </ColorScaleContext.Provider>
-                  </SetHoverPointContext.Provider>
+                  </SetSelectedWeatherContext.Provider>
                 </InteractiveStage>
               </YTransformerContext.Provider>
             </XTransformerContext.Provider>
@@ -184,7 +189,7 @@ const MarginalHistogramComponent: FunctionComponent<HistogramProps> = (
         </div>
 
         <Stage width={80} height={dimension.height}>
-          <HoverPointContext.Provider value={point}>
+          <SelectedWeatherContext.Provider value={selectedWeather}>
             <YTransformerContext.Provider value={yTransformer}>
               <AccessorsContext.Provider value={accessors}>
                 <Layer x={80} rotation={90}>
@@ -192,7 +197,7 @@ const MarginalHistogramComponent: FunctionComponent<HistogramProps> = (
                 </Layer>
               </AccessorsContext.Provider>
             </YTransformerContext.Provider>
-          </HoverPointContext.Provider>
+          </SelectedWeatherContext.Provider>
         </Stage>
       </div>
     </div>
