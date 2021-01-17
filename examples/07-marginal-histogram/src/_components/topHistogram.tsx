@@ -62,6 +62,7 @@ const TopHistogramComponent: FunctionComponent<TopHistogramProps> = (props) => {
           fill="#5758BB"
           width={hoverLineThickness}
           opacity={0.5}
+          globalCompositeOperation="color-burn"
         />
       )}
     </>

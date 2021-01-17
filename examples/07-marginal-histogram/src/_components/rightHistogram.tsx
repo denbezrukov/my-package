@@ -64,6 +64,7 @@ const RightHistogramComponent: FunctionComponent<TopHistogramProps> = (
           fill="#5758BB"
           width={hoverLineThickness}
           opacity={0.5}
+          globalCompositeOperation="color-burn"
         />
       )}
     </>
