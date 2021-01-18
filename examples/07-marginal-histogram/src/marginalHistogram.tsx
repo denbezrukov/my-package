@@ -5,7 +5,7 @@ import React, {
   useState,
   useMemo,
 } from 'react';
-import { Layer, Rect, Ring, Stage } from 'react-konva';
+import { Layer, Path, Rect, Ring, Stage } from 'react-konva';
 import { Weather, weatherList } from 'data';
 import { extent } from 'd3-array';
 import { scaleLinear, scaleSequential } from 'd3-scale';
@@ -17,6 +17,8 @@ import {
   XTransformerContext,
   YTransformerContext,
 } from 'core';
+import { Delaunay } from 'd3-delaunay';
+import Konva from 'konva';
 import { HistogramProps } from './marginalHistogram.interface';
 import { Dots } from './_components/dots';
 import { XAxis } from './_components/xAxis';
@@ -24,17 +26,15 @@ import { YAxis } from './_components/yAxis';
 import {
   AccessorsContext,
   ColorScaleContext,
-  SetSelectedWeatherContext,
   SelectedWeatherContext,
 } from './marginalHistogram.constant';
 import { TopHistogram } from './_components/topHistogram';
 import { RightHistogram } from './_components/rightHistogram';
-import { Voronoi } from './_components/voronoi';
 
 const MarginalHistogramComponent: FunctionComponent<HistogramProps> = (
   props,
 ) => {
-  const { width, height } = props;
+  const { width, height, isVoronoiVisible } = props;
   const yAxisSize = 50;
   const xAxisSize = 50;
 
@@ -107,9 +107,28 @@ const MarginalHistogramComponent: FunctionComponent<HistogramProps> = (
     undefined,
   );
 
-  const setWeatherContext = useCallback(
-    (value: Weather | undefined) => setSelectedWeather(() => value),
-    [setSelectedWeather],
+  const onMouseLeave = useCallback(() => {
+    setSelectedWeather(undefined);
+  }, [setSelectedWeather]);
+
+  const voronoi = useMemo(() => {
+    const delaunay = Delaunay.from(
+      weatherList,
+      (d) => xTransformer.transform(accessors.xAccessor(d)),
+      (d) => yTransformer.transform(accessors.yAccessor(d)),
+    );
+    return delaunay.voronoi([0, 0, width, height]);
+  }, [width, height, xTransformer, yTransformer, accessors]);
+
+  const onMouseMove = useCallback(
+    (event: Konva.KonvaEventObject<MouseEvent>) => {
+      const { offsetX, offsetY } = event.evt;
+      const index = voronoi.delaunay.find(offsetX, offsetY);
+      const weather = weatherList[index];
+
+      setSelectedWeather(weather);
+    },
+    [voronoi],
   );
 
   const containerStyle = {
@@ -130,10 +149,6 @@ const MarginalHistogramComponent: FunctionComponent<HistogramProps> = (
     alignItems: 'flex-end',
   };
 
-  const onMouseLeave = useCallback(() => {
-    setSelectedWeather(undefined);
-  }, [setSelectedWeather]);
-
   return (
     <div style={containerStyle}>
       <div style={rowStyle}>
@@ -153,35 +168,42 @@ const MarginalHistogramComponent: FunctionComponent<HistogramProps> = (
           <DimensionContext.Provider value={dimension}>
             <XTransformerContext.Provider value={xTransformer}>
               <YTransformerContext.Provider value={yTransformer}>
-                <InteractiveStage>
-                  <SetSelectedWeatherContext.Provider value={setWeatherContext}>
-                    <ColorScaleContext.Provider value={colorScale}>
-                      <AccessorsContext.Provider value={accessors}>
-                        <Layer onMouseLeave={onMouseLeave}>
-                          <Rect width={width} height={height} fill="white" />
-                          <Dots weatherList={weatherList} />
-                          <Voronoi weatherList={weatherList} />
-                          {selectedWeather && (
-                            <Ring
-                              x={xTransformer.transform(
-                                accessors.xAccessor(selectedWeather),
-                              )}
-                              y={yTransformer.transform(
-                                accessors.yAccessor(selectedWeather),
-                              )}
-                              innerRadius={7}
-                              outerRadius={9}
-                              fill="#6F1E51"
-                            />
-                          )}
-                        </Layer>
-                        <Layer>
-                          <XAxis />
-                          <YAxis />
-                        </Layer>
-                      </AccessorsContext.Provider>
-                    </ColorScaleContext.Provider>
-                  </SetSelectedWeatherContext.Provider>
+                <InteractiveStage onMouseMove={onMouseMove}>
+                  <ColorScaleContext.Provider value={colorScale}>
+                    <AccessorsContext.Provider value={accessors}>
+                      <Layer onMouseLeave={onMouseLeave}>
+                        <Rect width={width} height={height} fill="white" />
+                        <Dots weatherList={weatherList} />
+                        {isVoronoiVisible && (
+                          <Path
+                            data={voronoi.render()}
+                            strokeWidth={1}
+                            stroke="#5758BB"
+                            listening={false}
+                            perfectDrawEnabled={false}
+                            hitStrokeWidth={0}
+                          />
+                        )}
+                        {selectedWeather && (
+                          <Ring
+                            x={xTransformer.transform(
+                              accessors.xAccessor(selectedWeather),
+                            )}
+                            y={yTransformer.transform(
+                              accessors.yAccessor(selectedWeather),
+                            )}
+                            innerRadius={7}
+                            outerRadius={9}
+                            fill="#6F1E51"
+                          />
+                        )}
+                      </Layer>
+                      <Layer>
+                        <XAxis />
+                        <YAxis />
+                      </Layer>
+                    </AccessorsContext.Provider>
+                  </ColorScaleContext.Provider>
                 </InteractiveStage>
               </YTransformerContext.Provider>
             </XTransformerContext.Provider>

@@ -44,10 +44,3 @@ export const SelectedWeatherContext = createContext<Weather | undefined>(
 );
 
 export const useSelectedWeather = () => useContext(SelectedWeatherContext);
-
-export const SetSelectedWeatherContext = createContext<
-  (point: Weather | undefined) => void
->(() => undefined);
-
-export const useSetSelectedWeather = () =>
-  useContext(SetSelectedWeatherContext);

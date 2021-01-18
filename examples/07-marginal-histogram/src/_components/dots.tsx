@@ -22,7 +22,15 @@ const DotComponent: FunctionComponent<DotProps> = (props) => {
 
   return (
     <>
-      <Circle radius={4} x={x} y={y} fill={fill} />
+      <Circle
+        listening={false}
+        perfectDrawEnabled={false}
+        radius={4}
+        x={x}
+        y={y}
+        fill={fill}
+        hitStrokeWidth={0}
+      />
     </>
   );
 };
