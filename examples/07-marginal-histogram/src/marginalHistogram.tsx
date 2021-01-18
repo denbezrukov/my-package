@@ -30,6 +30,7 @@ import {
 } from './marginalHistogram.constant';
 import { TopHistogram } from './_components/topHistogram';
 import { RightHistogram } from './_components/rightHistogram';
+import { Legend } from './_components/legend';
 
 const MarginalHistogramComponent: FunctionComponent<HistogramProps> = (
   props,
@@ -168,22 +169,15 @@ const MarginalHistogramComponent: FunctionComponent<HistogramProps> = (
           <DimensionContext.Provider value={dimension}>
             <XTransformerContext.Provider value={xTransformer}>
               <YTransformerContext.Provider value={yTransformer}>
-                <InteractiveStage onMouseMove={onMouseMove}>
+                <InteractiveStage>
                   <ColorScaleContext.Provider value={colorScale}>
                     <AccessorsContext.Provider value={accessors}>
-                      <Layer onMouseLeave={onMouseLeave}>
+                      <Layer
+                        onMouseLeave={onMouseLeave}
+                        onMouseMove={onMouseMove}
+                      >
                         <Rect width={width} height={height} fill="white" />
                         <Dots weatherList={weatherList} />
-                        {isVoronoiVisible && (
-                          <Path
-                            data={voronoi.render()}
-                            strokeWidth={1}
-                            stroke="#5758BB"
-                            listening={false}
-                            perfectDrawEnabled={false}
-                            hitStrokeWidth={0}
-                          />
-                        )}
                         {selectedWeather && (
                           <Ring
                             x={xTransformer.transform(
@@ -198,7 +192,20 @@ const MarginalHistogramComponent: FunctionComponent<HistogramProps> = (
                           />
                         )}
                       </Layer>
+                      {isVoronoiVisible && (
+                        <Layer>
+                          <Path
+                            data={voronoi.render()}
+                            strokeWidth={1}
+                            stroke="#5758BB"
+                            listening={false}
+                            perfectDrawEnabled={false}
+                            hitStrokeWidth={0}
+                          />
+                        </Layer>
+                      )}
                       <Layer>
+                        <Legend />
                         <XAxis />
                         <YAxis />
                       </Layer>

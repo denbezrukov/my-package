@@ -1,6 +1,11 @@
 export { LeftAxis } from './axis/leftAxis/leftAxis';
+export { LeftTick } from './axis/leftAxis/leftTick';
 export { BottomAxis } from './axis/botomAxis/bottomAxis';
+export { BottomTick } from './axis/botomAxis/bottomTick';
 export { RightAxis } from './axis/rightAxis/rightAxis';
+export { RightTick } from './axis/rightAxis/rightTick';
+export { TopAxis } from './axis/topAxis/topAxis';
+export { TopTick } from './axis/topAxis/topTick';
 export { Grid } from './grid/grid';
 export { useTransformerState } from './transform/_hooks/useTransformerState';
 export { TransformerConfig } from './transform/transform.interface';
