@@ -5,7 +5,7 @@ import { Weather } from 'data';
 import { useAccessors, useColorScale } from '../marginalHistogram.constant';
 
 interface DotProps {
-  weather: Weather;
+  weather: Weather & { isWithinRange: boolean };
 }
 
 const DotComponent: FunctionComponent<DotProps> = (props) => {
@@ -25,7 +25,8 @@ const DotComponent: FunctionComponent<DotProps> = (props) => {
       <Circle
         listening={false}
         perfectDrawEnabled={false}
-        radius={4}
+        radius={weather.isWithinRange ? 4 : 2}
+        opacity={weather.isWithinRange ? 1 : 0.3}
         x={x}
         y={y}
         fill={fill}
@@ -38,7 +39,7 @@ const DotComponent: FunctionComponent<DotProps> = (props) => {
 const Dot = memo(DotComponent);
 
 interface DotsProps {
-  weatherList: Weather[];
+  weatherList: (Weather & { isWithinRange: boolean })[];
 }
 
 const DotsComponent: FunctionComponent<DotsProps> = (props) => {

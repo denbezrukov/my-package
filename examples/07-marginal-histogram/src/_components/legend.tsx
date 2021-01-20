@@ -5,11 +5,12 @@ import { useDimension, TopTick, getTextSize } from 'core';
 import { scaleLinear } from 'd3-scale';
 import Konva from 'konva';
 import { median } from 'd3-array';
-import { useColorScale } from '../marginalHistogram.constant';
+import { useColorScale, useSetFilter } from '../marginalHistogram.constant';
 
 const LegendComponent: React.FunctionComponent = () => {
   const { width, height } = useDimension();
   const colorScale = useColorScale();
+  const setFilter = useSetFilter();
 
   const legendWidth = 250;
   const legendHeight = 30;
@@ -46,14 +47,35 @@ const LegendComponent: React.FunctionComponent = () => {
 
   const onMouseMove = useCallback(
     (event: Konva.KonvaEventObject<MouseEvent>) => {
-      setPivot(event.evt.offsetX - event.currentTarget.getClientRect().x);
+      const nextPivot =
+        event.evt.offsetX - event.currentTarget.getClientRect().x;
+
+      setFilter(() => {
+        const to = new Date(
+          legendTickScale.invert(
+            (nextPivot ?? 0) + legendHighlightBarWidth / 2,
+          ),
+        );
+        const from = new Date(
+          legendTickScale.invert(
+            (nextPivot ?? 0) - legendHighlightBarWidth / 2,
+          ),
+        );
+
+        return {
+          to,
+          from,
+        };
+      });
+      setPivot(nextPivot);
     },
-    [setPivot],
+    [setPivot, setFilter, legendHighlightBarWidth, legendTickScale],
   );
 
   const onMouseLeave = useCallback(() => {
     setPivot(undefined);
-  }, [setPivot]);
+    setFilter(() => undefined);
+  }, [setPivot, setFilter]);
 
   const formatterHighlight = new Intl.DateTimeFormat('en', {
     month: 'short',

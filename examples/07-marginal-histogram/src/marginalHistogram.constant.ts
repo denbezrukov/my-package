@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react';
+import { createContext, Dispatch, SetStateAction, useContext } from 'react';
 import { ScaleSequential } from 'd3-scale';
 import { Weather } from 'data';
 
@@ -44,3 +44,22 @@ export const SelectedWeatherContext = createContext<Weather | undefined>(
 );
 
 export const useSelectedWeather = () => useContext(SelectedWeatherContext);
+
+export interface Filter {
+  from: Date;
+  to: Date;
+}
+
+export const SetFilterContext = createContext<
+  Dispatch<SetStateAction<Filter | undefined>> | undefined
+>(undefined);
+
+export const useSetFilter = () => {
+  const setFilter = useContext(SetFilterContext);
+
+  if (setFilter) {
+    return setFilter;
+  }
+
+  throw new Error('Set filter is undefined');
+};

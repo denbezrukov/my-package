@@ -26,7 +26,9 @@ import { YAxis } from './_components/yAxis';
 import {
   AccessorsContext,
   ColorScaleContext,
+  Filter,
   SelectedWeatherContext,
+  SetFilterContext,
 } from './marginalHistogram.constant';
 import { TopHistogram } from './_components/topHistogram';
 import { RightHistogram } from './_components/rightHistogram';
@@ -46,6 +48,24 @@ const MarginalHistogramComponent: FunctionComponent<HistogramProps> = (
       colorAccessor: (weather: Weather) => new Date(weather.date),
     }),
     [],
+  );
+
+  const [filter, setFilter] = useState<Filter | undefined>(undefined);
+
+  const filteredWeatherList = useMemo(
+    () =>
+      weatherList.map((weather) => {
+        const date = accessors.colorAccessor(weather);
+        const isWithinRange =
+          filter !== undefined
+            ? date >= filter.from && date <= filter.to
+            : true;
+        return {
+          ...weather,
+          isWithinRange,
+        };
+      }),
+    [accessors, filter],
   );
 
   const dateExtent = useMemo(() => {
@@ -170,47 +190,49 @@ const MarginalHistogramComponent: FunctionComponent<HistogramProps> = (
             <XTransformerContext.Provider value={xTransformer}>
               <YTransformerContext.Provider value={yTransformer}>
                 <InteractiveStage>
-                  <ColorScaleContext.Provider value={colorScale}>
-                    <AccessorsContext.Provider value={accessors}>
-                      <Layer
-                        onMouseLeave={onMouseLeave}
-                        onMouseMove={onMouseMove}
-                      >
-                        <Rect width={width} height={height} fill="white" />
-                        <Dots weatherList={weatherList} />
-                        {selectedWeather && (
-                          <Ring
-                            x={xTransformer.transform(
-                              accessors.xAccessor(selectedWeather),
-                            )}
-                            y={yTransformer.transform(
-                              accessors.yAccessor(selectedWeather),
-                            )}
-                            innerRadius={7}
-                            outerRadius={9}
-                            fill="#6F1E51"
-                          />
-                        )}
-                      </Layer>
-                      {isVoronoiVisible && (
-                        <Layer>
-                          <Path
-                            data={voronoi.render()}
-                            strokeWidth={1}
-                            stroke="#5758BB"
-                            listening={false}
-                            perfectDrawEnabled={false}
-                            hitStrokeWidth={0}
-                          />
+                  <SetFilterContext.Provider value={setFilter}>
+                    <ColorScaleContext.Provider value={colorScale}>
+                      <AccessorsContext.Provider value={accessors}>
+                        <Layer
+                          onMouseLeave={onMouseLeave}
+                          onMouseMove={onMouseMove}
+                        >
+                          <Rect width={width} height={height} fill="white" />
+                          <Dots weatherList={filteredWeatherList} />
+                          {selectedWeather && (
+                            <Ring
+                              x={xTransformer.transform(
+                                accessors.xAccessor(selectedWeather),
+                              )}
+                              y={yTransformer.transform(
+                                accessors.yAccessor(selectedWeather),
+                              )}
+                              innerRadius={7}
+                              outerRadius={9}
+                              fill="#6F1E51"
+                            />
+                          )}
                         </Layer>
-                      )}
-                      <Layer>
-                        <Legend />
-                        <XAxis />
-                        <YAxis />
-                      </Layer>
-                    </AccessorsContext.Provider>
-                  </ColorScaleContext.Provider>
+                        {isVoronoiVisible && (
+                          <Layer>
+                            <Path
+                              data={voronoi.render()}
+                              strokeWidth={1}
+                              stroke="#5758BB"
+                              listening={false}
+                              perfectDrawEnabled={false}
+                              hitStrokeWidth={0}
+                            />
+                          </Layer>
+                        )}
+                        <Layer>
+                          <Legend />
+                          <XAxis />
+                          <YAxis />
+                        </Layer>
+                      </AccessorsContext.Provider>
+                    </ColorScaleContext.Provider>
+                  </SetFilterContext.Provider>
                 </InteractiveStage>
               </YTransformerContext.Provider>
             </XTransformerContext.Provider>
