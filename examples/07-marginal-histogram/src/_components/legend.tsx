@@ -14,7 +14,7 @@ const LegendComponent: React.FunctionComponent = () => {
 
   const legendWidth = 250;
   const legendHeight = 30;
-  const legendHighlightBarWidth = legendWidth * 0.05;
+  const legendHighlightBarWidth = legendWidth * 0.15;
 
   const legendTickScale = useMemo(
     () => scaleLinear().domain(colorScale.domain()).range([0, legendWidth]),
@@ -47,8 +47,14 @@ const LegendComponent: React.FunctionComponent = () => {
 
   const onMouseMove = useCallback(
     (event: Konva.KonvaEventObject<MouseEvent>) => {
+      const x = event.evt.offsetX - event.currentTarget.getClientRect().x;
+
       const nextPivot =
-        event.evt.offsetX - event.currentTarget.getClientRect().x;
+        median([
+          0,
+          x - legendHighlightBarWidth / 2,
+          legendWidth - legendHighlightBarWidth,
+        ]) ?? 0;
 
       setFilter(() => {
         const to = new Date(
@@ -61,15 +67,25 @@ const LegendComponent: React.FunctionComponent = () => {
             (nextPivot ?? 0) - legendHighlightBarWidth / 2,
           ),
         );
+        const date = new Date(legendTickScale.invert(nextPivot));
+        const color = colorScale(date);
 
         return {
           to,
           from,
+          color,
         };
       });
       setPivot(nextPivot);
     },
-    [setPivot, setFilter, legendHighlightBarWidth, legendTickScale],
+    [
+      setPivot,
+      setFilter,
+      legendHighlightBarWidth,
+      legendTickScale,
+      colorScale,
+      legendWidth,
+    ],
   );
 
   const onMouseLeave = useCallback(() => {
@@ -120,17 +136,10 @@ const LegendComponent: React.FunctionComponent = () => {
           })}
         </Group>
       ) : (
-        <Group
-          listening={false}
-          x={median([
-            0,
-            pivot - legendHighlightBarWidth / 2,
-            legendWidth - legendHighlightBarWidth,
-          ])}
-        >
+        <Group listening={false} x={pivot}>
           <Text
             align="center"
-            x={legendHighlightBarWidth - textSize.width / 2}
+            x={(legendHighlightBarWidth - textSize.width) / 2}
             y={-(textSize.height + 5)}
             text={text}
           />

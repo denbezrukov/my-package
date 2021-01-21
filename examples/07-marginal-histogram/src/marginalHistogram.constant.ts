@@ -48,6 +48,7 @@ export const useSelectedWeather = () => useContext(SelectedWeatherContext);
 export interface Filter {
   from: Date;
   to: Date;
+  color: string;
 }
 
 export const SetFilterContext = createContext<

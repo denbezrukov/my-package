@@ -11,26 +11,31 @@ import {
 } from '../marginalHistogram.constant';
 
 interface TopHistogramProps {
-  weatherList: Weather[];
+  weatherList: (Weather & { isWithinRange: boolean })[];
+  filtered: boolean;
+  color: string | undefined;
 }
 
 type ArrayType<T> = T extends Array<infer R> ? R : never;
 
 const TopHistogramComponent: FunctionComponent<TopHistogramProps> = (props) => {
-  const { weatherList } = props;
+  const { weatherList, filtered, color } = props;
   const { transform } = useXTransformer<number>();
   const { xAccessor } = useAccessors();
   const selectedWeather = useSelectedWeather();
 
-  const bins = useMemo(() => {
+  const binsGenerator = useMemo(() => {
     const [left, right] = transform.domain();
-    const binsGenerator = bin<Weather, number>()
+    return bin<Weather, number>()
       .domain([left ?? 0, right ?? 0])
       .value(xAccessor)
       .thresholds(20);
+  }, [transform, xAccessor]);
 
-    return binsGenerator(weatherList);
-  }, [transform, xAccessor, weatherList]);
+  const bins = useMemo(() => binsGenerator(weatherList), [
+    binsGenerator,
+    weatherList,
+  ]);
 
   const histogramHeight = 70;
 
@@ -44,17 +49,29 @@ const TopHistogramComponent: FunctionComponent<TopHistogramProps> = (props) => {
     };
   }, [bins]);
 
-  const data = area<ArrayType<typeof bins>>()
+  const areaGenerator = area<ArrayType<typeof bins>>()
     .x((d) => transform(((d.x0 ?? 0) + (d.x1 ?? 0)) / 2))
     .y0(histogramHeight)
     .y1((d) => scale(d.length))
-    .curve(curveBasis)(bins);
+    .curve(curveBasis);
+
+  const data = areaGenerator(bins);
+
+  const hoveredBins = useMemo(
+    () => binsGenerator(weatherList.filter((weather) => weather.isWithinRange)),
+    [binsGenerator, weatherList],
+  );
+
+  const hoveredData = areaGenerator(hoveredBins);
 
   const hoverLineThickness = 10;
 
   return data !== null ? (
     <>
       <Path data={data} fill="#cbd2d7" />
+      {hoveredData && filtered && (
+        <Path data={hoveredData} fill={color} stroke="white" />
+      )}
       {selectedWeather && (
         <Rect
           x={transform(xAccessor(selectedWeather)) - hoverLineThickness / 2}

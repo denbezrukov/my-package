@@ -179,7 +179,11 @@ const MarginalHistogramComponent: FunctionComponent<HistogramProps> = (
               <XTransformerContext.Provider value={xTransformer}>
                 <AccessorsContext.Provider value={accessors}>
                   <Layer>
-                    <TopHistogram weatherList={weatherList} />
+                    <TopHistogram
+                      weatherList={filteredWeatherList}
+                      filtered={filter !== undefined}
+                      color={filter?.color}
+                    />
                   </Layer>
                 </AccessorsContext.Provider>
               </XTransformerContext.Provider>
@@ -244,7 +248,11 @@ const MarginalHistogramComponent: FunctionComponent<HistogramProps> = (
             <YTransformerContext.Provider value={yTransformer}>
               <AccessorsContext.Provider value={accessors}>
                 <Layer x={80} rotation={90}>
-                  <RightHistogram weatherList={weatherList} />
+                  <RightHistogram
+                    weatherList={filteredWeatherList}
+                    filtered={filter !== undefined}
+                    color={filter?.color}
+                  />
                 </Layer>
               </AccessorsContext.Provider>
             </YTransformerContext.Provider>
