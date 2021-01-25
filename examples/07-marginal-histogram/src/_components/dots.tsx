@@ -1,7 +1,8 @@
-import React, { FunctionComponent, memo } from 'react';
+import React, { FunctionComponent, memo, useRef, useLayoutEffect } from 'react';
 import { Circle } from 'react-konva';
 import { useXTransformer, useYTransformer } from 'core';
 import { Weather } from 'data';
+import Konva from 'konva';
 import { useAccessors, useColorScale } from '../marginalHistogram.constant';
 
 interface DotProps {
@@ -10,6 +11,7 @@ interface DotProps {
 
 const DotComponent: FunctionComponent<DotProps> = (props) => {
   const { weather } = props;
+  const ref = useRef<Konva.Circle>(null);
 
   const { transform: xTransform } = useXTransformer();
   const { transform: yTransform } = useYTransformer();
@@ -20,19 +22,28 @@ const DotComponent: FunctionComponent<DotProps> = (props) => {
   const y = yTransform(yAccessor(weather));
   const fill = colorScale(colorAccessor(weather));
 
+  useLayoutEffect(() => {
+    const handle = requestAnimationFrame(() => {
+      ref.current?.to({
+        radius: weather.isWithinRange ? 4 : 2,
+        opacity: weather.isWithinRange ? 1 : 0.3,
+      });
+    });
+
+    return () => cancelAnimationFrame(handle);
+  }, [ref, weather.isWithinRange]);
+
   return (
-    <>
-      <Circle
-        listening={false}
-        perfectDrawEnabled={false}
-        radius={weather.isWithinRange ? 4 : 2}
-        opacity={weather.isWithinRange ? 1 : 0.3}
-        x={x}
-        y={y}
-        fill={fill}
-        hitStrokeWidth={0}
-      />
-    </>
+    <Circle
+      ref={ref}
+      listening={false}
+      perfectDrawEnabled={false}
+      radius={0}
+      x={x}
+      y={y}
+      fill={fill}
+      hitStrokeWidth={0}
+    />
   );
 };
 

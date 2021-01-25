@@ -1,5 +1,5 @@
 import React, { FunctionComponent, memo, useMemo } from 'react';
-import { Path, Rect } from 'react-konva';
+import { Path } from 'react-konva';
 import { useXTransformer } from 'core';
 import { bin, extent } from 'd3-array';
 import { Weather } from 'data';
@@ -9,6 +9,7 @@ import {
   useAccessors,
   useSelectedWeather,
 } from '../marginalHistogram.constant';
+import { HighlightRect } from './highlightRect';
 
 interface TopHistogramProps {
   weatherList: (Weather & { isWithinRange: boolean })[];
@@ -72,16 +73,21 @@ const TopHistogramComponent: FunctionComponent<TopHistogramProps> = (props) => {
       {hoveredData && filtered && (
         <Path data={hoveredData} fill={color} stroke="white" />
       )}
-      {selectedWeather && (
-        <Rect
-          x={transform(xAccessor(selectedWeather)) - hoverLineThickness / 2}
-          height={histogramHeight + 10}
-          fill="#5758BB"
-          width={hoverLineThickness}
-          opacity={0.5}
-          globalCompositeOperation="color-burn"
-        />
-      )}
+      <HighlightRect
+        items={
+          selectedWeather
+            ? [
+                {
+                  x:
+                    transform(xAccessor(selectedWeather)) -
+                    hoverLineThickness / 2,
+                  height: histogramHeight + 10,
+                  width: hoverLineThickness,
+                },
+              ]
+            : []
+        }
+      />
     </>
   ) : null;
 };
