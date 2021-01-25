@@ -26,6 +26,7 @@ const DotComponent: FunctionComponent<DotProps> = (props) => {
     ref.current?.to({
       radius: weather.isWithinRange ? 4 : 2,
       opacity: weather.isWithinRange ? 1 : 0.3,
+      duration: 0.4,
     });
   }, [ref, weather.isWithinRange]);
 
