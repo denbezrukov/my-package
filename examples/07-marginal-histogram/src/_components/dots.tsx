@@ -23,14 +23,10 @@ const DotComponent: FunctionComponent<DotProps> = (props) => {
   const fill = colorScale(colorAccessor(weather));
 
   useLayoutEffect(() => {
-    const handle = requestAnimationFrame(() => {
-      ref.current?.to({
-        radius: weather.isWithinRange ? 4 : 2,
-        opacity: weather.isWithinRange ? 1 : 0.3,
-      });
+    ref.current?.to({
+      radius: weather.isWithinRange ? 4 : 2,
+      opacity: weather.isWithinRange ? 1 : 0.3,
     });
-
-    return () => cancelAnimationFrame(handle);
   }, [ref, weather.isWithinRange]);
 
   return (
