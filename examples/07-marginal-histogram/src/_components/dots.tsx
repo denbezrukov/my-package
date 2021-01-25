@@ -3,7 +3,11 @@ import { Circle } from 'react-konva';
 import { useXTransformer, useYTransformer } from 'core';
 import { Weather } from 'data';
 import Konva from 'konva';
-import { useAccessors, useColorScale } from '../marginalHistogram.constant';
+import {
+  useAccessors,
+  useColorScale,
+  useFilteredWeatherList,
+} from '../marginalHistogram.constant';
 
 interface DotProps {
   weather: Weather & { isWithinRange: boolean };
@@ -46,16 +50,12 @@ const DotComponent: FunctionComponent<DotProps> = (props) => {
 
 const Dot = memo(DotComponent);
 
-interface DotsProps {
-  weatherList: (Weather & { isWithinRange: boolean })[];
-}
-
-const DotsComponent: FunctionComponent<DotsProps> = (props) => {
-  const { weatherList } = props;
+const DotsComponent: FunctionComponent = () => {
+  const filteredWeatherList = useFilteredWeatherList();
 
   return (
     <>
-      {weatherList.map((weather, index) => (
+      {filteredWeatherList.map((weather, index) => (
         <Dot key={index} weather={weather} />
       ))}
     </>

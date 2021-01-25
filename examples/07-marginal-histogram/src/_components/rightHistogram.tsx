@@ -7,25 +7,19 @@ import { scaleLinear } from 'd3-scale';
 import { area, curveBasis } from 'd3-shape';
 import {
   useAccessors,
-  useSelectedWeather,
+  useFilteredWeatherList,
+  useMarginalHistogramState,
 } from '../marginalHistogram.constant';
 import { HighlightRect } from './highlightRect';
 
-interface TopHistogramProps {
-  weatherList: (Weather & { isWithinRange: boolean })[];
-  filtered: boolean;
-  color: string | undefined;
-}
-
 type ArrayType<T> = T extends Array<infer R> ? R : never;
 
-const RightHistogramComponent: FunctionComponent<TopHistogramProps> = (
-  props,
-) => {
-  const { weatherList, filtered, color } = props;
+const RightHistogramComponent: FunctionComponent = () => {
+  const { filter, selectedWeather } = useMarginalHistogramState();
+  const filteredWeatherList = useFilteredWeatherList();
+
   const { transform } = useYTransformer<number>();
   const { yAccessor } = useAccessors();
-  const selectedWeather = useSelectedWeather();
 
   const binsGenerator = useMemo(() => {
     const [left, right] = transform.domain();
@@ -35,9 +29,9 @@ const RightHistogramComponent: FunctionComponent<TopHistogramProps> = (
       .thresholds(20);
   }, [transform, yAccessor]);
 
-  const bins = useMemo(() => binsGenerator(weatherList), [
+  const bins = useMemo(() => binsGenerator(filteredWeatherList), [
     binsGenerator,
-    weatherList,
+    filteredWeatherList,
   ]);
 
   const histogramHeight = 70;
@@ -61,8 +55,11 @@ const RightHistogramComponent: FunctionComponent<TopHistogramProps> = (
   const data = areaGenerator(bins);
 
   const hoveredBins = useMemo(
-    () => binsGenerator(weatherList.filter((weather) => weather.isWithinRange)),
-    [binsGenerator, weatherList],
+    () =>
+      binsGenerator(
+        filteredWeatherList.filter((weather) => weather.isWithinRange),
+      ),
+    [binsGenerator, filteredWeatherList],
   );
 
   const hoveredData = areaGenerator(hoveredBins);
@@ -72,8 +69,8 @@ const RightHistogramComponent: FunctionComponent<TopHistogramProps> = (
   return data !== null ? (
     <>
       <Path data={data} fill="#cbd2d7" />
-      {hoveredData && filtered && (
-        <Path data={hoveredData} fill={color} stroke="white" />
+      {hoveredData && filter && (
+        <Path data={hoveredData} fill={filter.color} stroke="white" />
       )}
       <HighlightRect
         items={

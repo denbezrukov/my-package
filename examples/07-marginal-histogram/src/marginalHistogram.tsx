@@ -2,8 +2,8 @@ import React, {
   FunctionComponent,
   memo,
   useCallback,
-  useState,
   useMemo,
+  useReducer,
 } from 'react';
 import { Layer, Path, Rect, Ring, Stage } from 'react-konva';
 import { Weather, weatherList } from 'data';
@@ -26,13 +26,16 @@ import { YAxis } from './_components/yAxis';
 import {
   AccessorsContext,
   ColorScaleContext,
-  Filter,
-  SelectedWeatherContext,
-  SetFilterContext,
+  MarginalHistogramDispatchContext,
+  MarginalHistogramStateContext,
 } from './marginalHistogram.constant';
 import { TopHistogram } from './_components/topHistogram';
 import { RightHistogram } from './_components/rightHistogram';
 import { Legend } from './_components/legend';
+import {
+  initialState,
+  marginalHistogramReducer,
+} from './marginalHistogram.reducer';
 
 const MarginalHistogramComponent: FunctionComponent<HistogramProps> = (
   props,
@@ -50,23 +53,7 @@ const MarginalHistogramComponent: FunctionComponent<HistogramProps> = (
     [],
   );
 
-  const [filter, setFilter] = useState<Filter | undefined>(undefined);
-
-  const filteredWeatherList = useMemo(
-    () =>
-      weatherList.map((weather) => {
-        const date = accessors.colorAccessor(weather);
-        const isWithinRange =
-          filter !== undefined
-            ? date >= filter.from && date <= filter.to
-            : true;
-        return {
-          ...weather,
-          isWithinRange,
-        };
-      }),
-    [accessors, filter],
-  );
+  const [state, dispatch] = useReducer(marginalHistogramReducer, initialState);
 
   const dateExtent = useMemo(() => {
     const [left, right] = extent(weatherList.map(accessors.colorAccessor));
@@ -124,13 +111,12 @@ const MarginalHistogramComponent: FunctionComponent<HistogramProps> = (
     [dateExtent],
   );
 
-  const [selectedWeather, setSelectedWeather] = useState<Weather | undefined>(
-    undefined,
-  );
-
   const onMouseLeave = useCallback(() => {
-    setSelectedWeather(undefined);
-  }, [setSelectedWeather]);
+    dispatch({
+      type: 'SET_WEATHER',
+      selectedWeather: undefined,
+    });
+  }, [dispatch]);
 
   const voronoi = useMemo(() => {
     const delaunay = Delaunay.from(
@@ -147,9 +133,12 @@ const MarginalHistogramComponent: FunctionComponent<HistogramProps> = (
       const index = voronoi.delaunay.find(offsetX, offsetY);
       const weather = weatherList[index];
 
-      setSelectedWeather(weather);
+      dispatch({
+        type: 'SET_WEATHER',
+        selectedWeather: weather,
+      });
     },
-    [voronoi],
+    [voronoi, dispatch],
   );
 
   const containerStyle = {
@@ -175,68 +164,66 @@ const MarginalHistogramComponent: FunctionComponent<HistogramProps> = (
       <div style={rowStyle}>
         <div style={columnStyle}>
           <Stage width={dimension.width} height={80}>
-            <SelectedWeatherContext.Provider value={selectedWeather}>
+            <MarginalHistogramStateContext.Provider value={state}>
               <XTransformerContext.Provider value={xTransformer}>
                 <AccessorsContext.Provider value={accessors}>
                   <Layer>
-                    <TopHistogram
-                      weatherList={filteredWeatherList}
-                      filtered={filter !== undefined}
-                      color={filter?.color}
-                    />
+                    <TopHistogram />
                   </Layer>
                 </AccessorsContext.Provider>
               </XTransformerContext.Provider>
-            </SelectedWeatherContext.Provider>
+            </MarginalHistogramStateContext.Provider>
           </Stage>
 
           <DimensionContext.Provider value={dimension}>
             <XTransformerContext.Provider value={xTransformer}>
               <YTransformerContext.Provider value={yTransformer}>
                 <InteractiveStage>
-                  <SetFilterContext.Provider value={setFilter}>
-                    <ColorScaleContext.Provider value={colorScale}>
-                      <AccessorsContext.Provider value={accessors}>
-                        <Layer
-                          onMouseLeave={onMouseLeave}
-                          onMouseMove={onMouseMove}
-                        >
-                          <Rect width={width} height={height} fill="white" />
-                          <Dots weatherList={filteredWeatherList} />
-                          {selectedWeather && (
-                            <Ring
-                              x={xTransformer.transform(
-                                accessors.xAccessor(selectedWeather),
-                              )}
-                              y={yTransformer.transform(
-                                accessors.yAccessor(selectedWeather),
-                              )}
-                              innerRadius={7}
-                              outerRadius={9}
-                              fill="#6F1E51"
-                            />
-                          )}
-                        </Layer>
-                        {isVoronoiVisible && (
-                          <Layer>
-                            <Path
-                              data={voronoi.render()}
-                              strokeWidth={1}
-                              stroke="#5758BB"
-                              listening={false}
-                              perfectDrawEnabled={false}
-                              hitStrokeWidth={0}
-                            />
+                  <MarginalHistogramDispatchContext.Provider value={dispatch}>
+                    <MarginalHistogramStateContext.Provider value={state}>
+                      <ColorScaleContext.Provider value={colorScale}>
+                        <AccessorsContext.Provider value={accessors}>
+                          <Layer
+                            onMouseLeave={onMouseLeave}
+                            onMouseMove={onMouseMove}
+                          >
+                            <Rect width={width} height={height} fill="white" />
+                            <Dots />
+                            {state.selectedWeather && (
+                              <Ring
+                                x={xTransformer.transform(
+                                  accessors.xAccessor(state.selectedWeather),
+                                )}
+                                y={yTransformer.transform(
+                                  accessors.yAccessor(state.selectedWeather),
+                                )}
+                                innerRadius={7}
+                                outerRadius={9}
+                                fill="#6F1E51"
+                              />
+                            )}
                           </Layer>
-                        )}
-                        <Layer>
-                          <Legend />
-                          <XAxis />
-                          <YAxis />
-                        </Layer>
-                      </AccessorsContext.Provider>
-                    </ColorScaleContext.Provider>
-                  </SetFilterContext.Provider>
+                          {isVoronoiVisible && (
+                            <Layer>
+                              <Path
+                                data={voronoi.render()}
+                                strokeWidth={1}
+                                stroke="#5758BB"
+                                listening={false}
+                                perfectDrawEnabled={false}
+                                hitStrokeWidth={0}
+                              />
+                            </Layer>
+                          )}
+                          <Layer>
+                            <Legend />
+                            <XAxis />
+                            <YAxis />
+                          </Layer>
+                        </AccessorsContext.Provider>
+                      </ColorScaleContext.Provider>
+                    </MarginalHistogramStateContext.Provider>
+                  </MarginalHistogramDispatchContext.Provider>
                 </InteractiveStage>
               </YTransformerContext.Provider>
             </XTransformerContext.Provider>
@@ -244,19 +231,15 @@ const MarginalHistogramComponent: FunctionComponent<HistogramProps> = (
         </div>
 
         <Stage width={80} height={dimension.height}>
-          <SelectedWeatherContext.Provider value={selectedWeather}>
+          <MarginalHistogramStateContext.Provider value={state}>
             <YTransformerContext.Provider value={yTransformer}>
               <AccessorsContext.Provider value={accessors}>
                 <Layer x={80} rotation={90}>
-                  <RightHistogram
-                    weatherList={filteredWeatherList}
-                    filtered={filter !== undefined}
-                    color={filter?.color}
-                  />
+                  <RightHistogram />
                 </Layer>
               </AccessorsContext.Provider>
             </YTransformerContext.Provider>
-          </SelectedWeatherContext.Provider>
+          </MarginalHistogramStateContext.Provider>
         </Stage>
       </div>
     </div>

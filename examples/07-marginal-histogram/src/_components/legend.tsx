@@ -5,12 +5,15 @@ import { useDimension, TopTick, getTextSize } from 'core';
 import { scaleLinear } from 'd3-scale';
 import Konva from 'konva';
 import { median } from 'd3-array';
-import { useColorScale, useSetFilter } from '../marginalHistogram.constant';
+import {
+  useColorScale,
+  useMarginalHistogramDispatch,
+} from '../marginalHistogram.constant';
 
 const LegendComponent: React.FunctionComponent = () => {
   const { width, height } = useDimension();
   const colorScale = useColorScale();
-  const setFilter = useSetFilter();
+  const dispatch = useMarginalHistogramDispatch();
 
   const legendWidth = 250;
   const legendHeight = 30;
@@ -56,31 +59,28 @@ const LegendComponent: React.FunctionComponent = () => {
           legendWidth - legendHighlightBarWidth,
         ]) ?? 0;
 
-      setFilter(() => {
-        const to = new Date(
-          legendTickScale.invert(
-            (nextPivot ?? 0) + legendHighlightBarWidth / 2,
-          ),
-        );
-        const from = new Date(
-          legendTickScale.invert(
-            (nextPivot ?? 0) - legendHighlightBarWidth / 2,
-          ),
-        );
-        const date = new Date(legendTickScale.invert(nextPivot));
-        const color = colorScale(date);
-
-        return {
-          to,
-          from,
-          color,
-        };
+      const to = new Date(
+        legendTickScale.invert((nextPivot ?? 0) + legendHighlightBarWidth / 2),
+      );
+      const from = new Date(
+        legendTickScale.invert((nextPivot ?? 0) - legendHighlightBarWidth / 2),
+      );
+      const date = new Date(legendTickScale.invert(nextPivot));
+      const color = colorScale(date);
+      const filter = {
+        to,
+        from,
+        color,
+      };
+      dispatch({
+        type: 'SET_FILTER',
+        filter,
       });
       setPivot(nextPivot);
     },
     [
       setPivot,
-      setFilter,
+      dispatch,
       legendHighlightBarWidth,
       legendTickScale,
       colorScale,
@@ -90,8 +90,11 @@ const LegendComponent: React.FunctionComponent = () => {
 
   const onMouseLeave = useCallback(() => {
     setPivot(undefined);
-    setFilter(() => undefined);
-  }, [setPivot, setFilter]);
+    dispatch({
+      type: 'SET_FILTER',
+      filter: undefined,
+    });
+  }, [setPivot, dispatch]);
 
   const formatterHighlight = new Intl.DateTimeFormat('en', {
     month: 'short',
