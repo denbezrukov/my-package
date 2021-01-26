@@ -7,7 +7,7 @@ import React, {
   useReducer,
 } from 'react';
 import { Layer, Path, Rect, Ring, Stage } from 'react-konva';
-import { Weather, weatherList } from 'data';
+import { weatherList } from 'data';
 import { extent } from 'd3-array';
 import { scaleLinear, scaleSequential } from 'd3-scale';
 import { interpolateRainbow } from 'd3-scale-chromatic';
