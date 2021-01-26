@@ -74,7 +74,7 @@ const HighlightRectComponent: FunctionComponent<HighlightRectProps> = (
       height: item.height,
       width: item.width,
       opacity: 0,
-      fill: 'transparent',
+      fill: item.fill,
     }),
     [],
   );
