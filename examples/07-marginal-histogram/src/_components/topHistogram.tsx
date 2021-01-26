@@ -6,9 +6,9 @@ import { Weather } from 'data';
 import { scaleLinear } from 'd3-scale';
 import { area, curveBasis } from 'd3-shape';
 import {
-  useAccessors,
   useFilteredWeatherList,
   useMarginalHistogramState,
+  xAccessor,
 } from '../marginalHistogram.constant';
 import { HighlightRect } from './highlightRect';
 
@@ -19,7 +19,6 @@ const TopHistogramComponent: FunctionComponent = () => {
   const filteredWeatherList = useFilteredWeatherList();
 
   const { transform } = useXTransformer<number>();
-  const { xAccessor } = useAccessors();
 
   const binsGenerator = useMemo(() => {
     const [left, right] = transform.domain();
@@ -27,7 +26,7 @@ const TopHistogramComponent: FunctionComponent = () => {
       .domain([left ?? 0, right ?? 0])
       .value(xAccessor)
       .thresholds(20);
-  }, [transform, xAccessor]);
+  }, [transform]);
 
   const bins = useMemo(() => binsGenerator(filteredWeatherList), [
     binsGenerator,

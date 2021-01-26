@@ -4,9 +4,11 @@ import { useXTransformer, useYTransformer } from 'core';
 import { Weather } from 'data';
 import Konva from 'konva';
 import {
-  useAccessors,
+  colorAccessor,
   useColorScale,
   useFilteredWeatherList,
+  xAccessor,
+  yAccessor,
 } from '../marginalHistogram.constant';
 
 interface DotProps {
@@ -20,7 +22,6 @@ const DotComponent: FunctionComponent<DotProps> = (props) => {
   const { transform: xTransform } = useXTransformer();
   const { transform: yTransform } = useYTransformer();
   const colorScale = useColorScale();
-  const { xAccessor, yAccessor, colorAccessor } = useAccessors();
 
   const x = xTransform(xAccessor(weather));
   const y = yTransform(yAccessor(weather));

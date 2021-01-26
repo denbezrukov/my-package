@@ -20,24 +20,6 @@ export const useColorScale = () => {
   throw new Error('Color scale is undefined');
 };
 
-interface Accessors {
-  xAccessor: (weather: Weather) => number;
-  yAccessor: (weather: Weather) => number;
-  colorAccessor: (weather: Weather) => Date;
-}
-
-export const AccessorsContext = createContext<Accessors | undefined>(undefined);
-
-export const useAccessors = () => {
-  const accessors = useContext(AccessorsContext);
-
-  if (accessors) {
-    return accessors;
-  }
-
-  throw new Error('Accessors context is undefined');
-};
-
 export const MarginalHistogramStateContext = createContext<
   MarginalHistogramState | undefined
 >(undefined);
