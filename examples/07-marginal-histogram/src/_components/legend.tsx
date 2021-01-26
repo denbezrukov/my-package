@@ -1,7 +1,7 @@
 import React, { memo, useMemo, useState, useCallback } from 'react';
 import { Group, Rect, Text } from 'react-konva';
 import { interpolateRainbow } from 'd3-scale-chromatic';
-import { useDimension, TopTick, getTextSize } from 'core';
+import { useDimension, TopTick, getTextSize, rafDebounce } from 'core';
 import { scaleLinear } from 'd3-scale';
 import Konva from 'konva';
 import { median } from 'd3-array';

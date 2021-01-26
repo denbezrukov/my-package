@@ -1,4 +1,4 @@
-import React, { FunctionComponent, memo, useRef, useLayoutEffect } from 'react';
+import React, { FunctionComponent, memo, useRef, useEffect } from 'react';
 import { Circle } from 'react-konva';
 import { useXTransformer, useYTransformer } from 'core';
 import { Weather } from 'data';
@@ -26,12 +26,15 @@ const DotComponent: FunctionComponent<DotProps> = (props) => {
   const y = yTransform(yAccessor(weather));
   const fill = colorScale(colorAccessor(weather));
 
-  useLayoutEffect(() => {
-    ref.current?.to({
-      radius: weather.isWithinRange ? 4 : 2,
-      opacity: weather.isWithinRange ? 1 : 0.3,
-      duration: 0.4,
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      ref.current?.to({
+        radius: weather.isWithinRange ? 4 : 2,
+        opacity: weather.isWithinRange ? 1 : 0.3,
+        duration: 0.4,
+      });
     });
+    return () => clearTimeout(handler);
   }, [ref, weather.isWithinRange]);
 
   return (
