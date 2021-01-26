@@ -2,13 +2,14 @@ import React, { FunctionComponent, memo, useCallback } from 'react';
 import { animated, config, Transition } from 'react-spring/renderprops-konva';
 
 interface HighlightRectProps {
-  items: { x: number; height: number; width: number }[];
+  items: { x: number; height: number; width: number; fill: string }[];
 }
 
 interface TransitionItem {
   x: number;
   width: number;
   height: number;
+  fill: string;
 }
 
 const HighlightRectComponent: FunctionComponent<HighlightRectProps> = (
@@ -18,13 +19,13 @@ const HighlightRectComponent: FunctionComponent<HighlightRectProps> = (
 
   const render = useCallback(
     () => (style: TransitionItem & { opacity: number }) => {
-      const { x, width, height, opacity } = style;
+      const { x, width, height, opacity, fill } = style;
 
       return (
         <animated.Rect
           x={x}
           height={height}
-          fill="#5758BB"
+          fill={fill}
           width={width}
           opacity={opacity}
           globalCompositeOperation="color-burn"
@@ -40,6 +41,7 @@ const HighlightRectComponent: FunctionComponent<HighlightRectProps> = (
       height: item.height,
       width: item.width,
       opacity: 0,
+      fill: 'transparent',
     }),
     [],
   );
@@ -50,6 +52,7 @@ const HighlightRectComponent: FunctionComponent<HighlightRectProps> = (
       height: item.height,
       width: item.width,
       opacity: 0.5,
+      fill: item.fill,
     }),
     [],
   );
@@ -60,6 +63,7 @@ const HighlightRectComponent: FunctionComponent<HighlightRectProps> = (
       height: item.height,
       width: item.width,
       opacity: 0.5,
+      fill: item.fill,
     }),
     [],
   );
@@ -70,6 +74,7 @@ const HighlightRectComponent: FunctionComponent<HighlightRectProps> = (
       height: item.height,
       width: item.width,
       opacity: 0,
+      fill: 'transparent',
     }),
     [],
   );

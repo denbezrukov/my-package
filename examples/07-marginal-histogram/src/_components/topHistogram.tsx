@@ -6,6 +6,8 @@ import { Weather } from 'data';
 import { scaleLinear } from 'd3-scale';
 import { area, curveBasis } from 'd3-shape';
 import {
+  colorAccessor,
+  useColorScale,
   useFilteredWeatherList,
   useMarginalHistogramState,
   xAccessor,
@@ -17,6 +19,7 @@ type ArrayType<T> = T extends Array<infer R> ? R : never;
 const TopHistogramComponent: FunctionComponent = () => {
   const { filter, selectedWeather } = useMarginalHistogramState();
   const filteredWeatherList = useFilteredWeatherList();
+  const colorScale = useColorScale();
 
   const { transform } = useXTransformer<number>();
 
@@ -81,6 +84,7 @@ const TopHistogramComponent: FunctionComponent = () => {
                     hoverLineThickness / 2,
                   height: histogramHeight + 10,
                   width: hoverLineThickness,
+                  fill: colorScale(colorAccessor(selectedWeather)),
                 },
               ]
             : []

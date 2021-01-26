@@ -158,13 +158,15 @@ const MarginalHistogramComponent: FunctionComponent<HistogramProps> = (
       <div style={rowStyle}>
         <div style={columnStyle}>
           <Stage width={dimension.width} height={80}>
-            <MarginalHistogramStateContext.Provider value={state}>
-              <XTransformerContext.Provider value={xTransformer}>
-                <Layer>
-                  <TopHistogram />
-                </Layer>
-              </XTransformerContext.Provider>
-            </MarginalHistogramStateContext.Provider>
+            <ColorScaleContext.Provider value={colorScale}>
+              <MarginalHistogramStateContext.Provider value={state}>
+                <XTransformerContext.Provider value={xTransformer}>
+                  <Layer>
+                    <TopHistogram />
+                  </Layer>
+                </XTransformerContext.Provider>
+              </MarginalHistogramStateContext.Provider>
+            </ColorScaleContext.Provider>
           </Stage>
 
           <DimensionContext.Provider value={dimension}>
@@ -190,7 +192,9 @@ const MarginalHistogramComponent: FunctionComponent<HistogramProps> = (
                               )}
                               innerRadius={7}
                               outerRadius={9}
-                              fill="#6F1E51"
+                              fill={colorScale(
+                                colorAccessor(state.selectedWeather),
+                              )}
                             />
                           )}
                         </Layer>
@@ -221,13 +225,15 @@ const MarginalHistogramComponent: FunctionComponent<HistogramProps> = (
         </div>
 
         <Stage width={80} height={dimension.height}>
-          <MarginalHistogramStateContext.Provider value={state}>
-            <YTransformerContext.Provider value={yTransformer}>
-              <Layer x={80} rotation={90}>
-                <RightHistogram />
-              </Layer>
-            </YTransformerContext.Provider>
-          </MarginalHistogramStateContext.Provider>
+          <ColorScaleContext.Provider value={colorScale}>
+            <MarginalHistogramStateContext.Provider value={state}>
+              <YTransformerContext.Provider value={yTransformer}>
+                <Layer x={80} rotation={90}>
+                  <RightHistogram />
+                </Layer>
+              </YTransformerContext.Provider>
+            </MarginalHistogramStateContext.Provider>
+          </ColorScaleContext.Provider>
         </Stage>
       </div>
     </div>
