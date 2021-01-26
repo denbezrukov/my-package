@@ -1,4 +1,5 @@
 import React, {
+  CSSProperties,
   FunctionComponent,
   memo,
   useCallback,
@@ -134,7 +135,7 @@ const MarginalHistogramComponent: FunctionComponent<HistogramProps> = (
     [voronoi, dispatch],
   );
 
-  const containerStyle = {
+  const containerStyle: CSSProperties = {
     backgroundColor: '#f8f9fa',
     height: height * 1.2,
     display: 'flex',
@@ -142,12 +143,12 @@ const MarginalHistogramComponent: FunctionComponent<HistogramProps> = (
     alignItems: 'center',
   };
 
-  const columnStyle = {
+  const columnStyle: CSSProperties = {
     display: 'flex',
-    flexDirection: 'column' as const,
+    flexDirection: 'column',
   };
 
-  const rowStyle = {
+  const rowStyle: CSSProperties = {
     display: 'flex',
     alignItems: 'flex-end',
   };
