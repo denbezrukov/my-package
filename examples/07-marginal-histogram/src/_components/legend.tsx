@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useState, useCallback } from 'react';
+import React, { memo, useMemo, useCallback } from 'react';
 import { Group, Rect, Text } from 'react-konva';
 import { interpolateRainbow } from 'd3-scale-chromatic';
 import { useDimension, TopTick, getTextSize, rafDebounce } from 'core';
@@ -8,12 +8,14 @@ import { median } from 'd3-array';
 import {
   useColorScale,
   useMarginalHistogramDispatch,
+  useMarginalHistogramState,
 } from '../marginalHistogram.constant';
 
 const LegendComponent: React.FunctionComponent = () => {
   const { width, height } = useDimension();
   const colorScale = useColorScale();
   const dispatch = useMarginalHistogramDispatch();
+  const { filter } = useMarginalHistogramState();
 
   const legendWidth = 250;
   const legendHeight = 30;
@@ -46,41 +48,38 @@ const LegendComponent: React.FunctionComponent = () => {
 
   const formatter = new Intl.DateTimeFormat('en', { month: 'short' });
 
-  const [pivot, setPivot] = useState<number | undefined>(undefined);
+  const onMouseMove = useMemo(
+    () =>
+      rafDebounce((event: Konva.KonvaEventObject<MouseEvent>) => {
+        const x = event.evt.offsetX - (width - legendWidth - 40);
+        const point =
+          median([
+            0,
+            x - legendHighlightBarWidth / 2,
+            legendWidth - legendHighlightBarWidth,
+          ]) ?? 0;
 
-  const onMouseMove = useCallback(
-    (event: Konva.KonvaEventObject<MouseEvent>) => {
-      const x = event.evt.offsetX - event.currentTarget.getClientRect().x;
+        const to = new Date(
+          legendTickScale.invert((point ?? 0) + legendHighlightBarWidth / 2),
+        );
+        const from = new Date(
+          legendTickScale.invert((point ?? 0) - legendHighlightBarWidth / 2),
+        );
+        const date = new Date(legendTickScale.invert(point));
+        const color = colorScale(date);
 
-      const nextPivot =
-        median([
-          0,
-          x - legendHighlightBarWidth / 2,
-          legendWidth - legendHighlightBarWidth,
-        ]) ?? 0;
-
-      const to = new Date(
-        legendTickScale.invert((nextPivot ?? 0) + legendHighlightBarWidth / 2),
-      );
-      const from = new Date(
-        legendTickScale.invert((nextPivot ?? 0) - legendHighlightBarWidth / 2),
-      );
-      const date = new Date(legendTickScale.invert(nextPivot));
-      const color = colorScale(date);
-      const filter = {
-        to,
-        from,
-        color,
-      };
-      dispatch({
-        type: 'SET_FILTER',
-        filter,
-      });
-      setPivot(nextPivot);
-    },
+        dispatch({
+          type: 'SET_FILTER',
+          filter: {
+            to,
+            from,
+            color,
+          },
+        });
+      }),
     [
-      setPivot,
       dispatch,
+      width,
       legendHighlightBarWidth,
       legendTickScale,
       colorScale,
@@ -89,28 +88,21 @@ const LegendComponent: React.FunctionComponent = () => {
   );
 
   const onMouseLeave = useCallback(() => {
-    setPivot(undefined);
+    onMouseMove.cancel();
     dispatch({
       type: 'SET_FILTER',
       filter: undefined,
     });
-  }, [setPivot, dispatch]);
+  }, [dispatch, onMouseMove]);
 
   const formatterHighlight = new Intl.DateTimeFormat('en', {
     month: 'short',
     day: '2-digit',
   });
 
-  const minDateToHighlight = new Date(
-    legendTickScale.invert((pivot ?? 0) - legendHighlightBarWidth / 2),
-  );
-  const maxDateToHighlight = new Date(
-    legendTickScale.invert((pivot ?? 0) + legendHighlightBarWidth / 2),
-  );
-
   const text = [
-    formatterHighlight.format(minDateToHighlight),
-    formatterHighlight.format(maxDateToHighlight),
+    formatterHighlight.format(filter?.to),
+    formatterHighlight.format(filter?.from),
   ].join(' - ');
 
   const textSize = getTextSize(text);
@@ -127,7 +119,7 @@ const LegendComponent: React.FunctionComponent = () => {
         onMouseLeave={onMouseLeave}
       />
 
-      {pivot === undefined ? (
+      {filter === undefined ? (
         <Group y={5}>
           {legendTickScale.ticks(3).map((tick, index) => {
             const date = new Date(tick);
@@ -139,7 +131,10 @@ const LegendComponent: React.FunctionComponent = () => {
           })}
         </Group>
       ) : (
-        <Group listening={false} x={pivot}>
+        <Group
+          listening={false}
+          x={legendTickScale(filter.to) - legendHighlightBarWidth / 2}
+        >
           <Text
             align="center"
             x={(legendHighlightBarWidth - textSize.width) / 2}

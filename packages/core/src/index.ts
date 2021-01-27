@@ -20,3 +20,4 @@ export { DimensionContext } from './dimension/dimensionContext';
 export { useDimension } from './dimension/useDimension';
 export { getTextSize } from './utils/textSize';
 export { rafDebounce } from './utils/rafDebounce';
+export { Transformer, Scale } from './transform/transform.interface';
