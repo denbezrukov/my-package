@@ -6,5 +6,5 @@
     "resolveJsonModule": true,
     "composite": false
   },
-  "exclude": ["node_modules", "**/build/**/"]
+  "exclude": ["**/node_modules", "**/.*/", "**/build/**/"]
 }
